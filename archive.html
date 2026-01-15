@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AIインサイトラボ | アーカイブ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <header>
+      <div class="header-inner">
+        <a class="logo" href="index.html">AI Insight Lab</a>
+        <nav aria-label="メインナビゲーション">
+          <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="categories.html">Categories</a></li>
+            <li><a href="archive.html">Archive</a></li>
+            <li><a href="profile.html">Profile</a></li>
+          </ul>
+        </nav>
+        <button class="menu-toggle" aria-label="メニューを開閉" aria-expanded="false">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+      <div class="mobile-nav" aria-label="モバイルナビゲーション">
+        <a href="index.html">Home</a>
+        <a href="categories.html">Categories</a>
+        <a href="archive.html">Archive</a>
+        <a href="profile.html">Profile</a>
+      </div>
+    </header>
+
+    <main>
+      <div class="container">
+        <section class="hero" style="margin-bottom: 32px;">
+          <h1>アーカイブ</h1>
+          <p>
+            過去の記事を年月順に閲覧できます。興味のあるタイムラインからトピックを掘り下げましょう。
+          </p>
+          <div class="hero-actions" style="align-items: center;">
+            <label class="button secondary" for="archive-year" style="cursor: pointer;">
+              <i class="fa-solid fa-calendar-days"></i>
+              <span>年で絞り込む</span>
+            </label>
+            <select id="archive-year" data-archive-year class="select-control">
+              <option value="">すべての年</option>
+            </select>
+          </div>
+        </section>
+
+        <section aria-labelledby="archive-heading">
+          <div class="section-header">
+            <h2 id="archive-heading">月別アーカイブ</h2>
+            <p class="status-text" data-archive-status></p>
+          </div>
+          <div data-archive-timeline>
+            <div class="status-text">
+              <div class="loader" role="status" aria-label="読み込み中"></div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer>
+      <div class="footer-inner">
+        <div class="footer-links">
+          <a href="https://www.instagram.com/" target="_blank" rel="noopener">Instagram</a>
+          <a href="https://coconala.com/" target="_blank" rel="noopener">ココナラ</a>
+          <a href="https://www.threads.net/" target="_blank" rel="noopener">Threads</a>
+        </div>
+        <p class="footer-copy">&copy; <span data-current-year></span> AI Insight Lab</p>
+      </div>
+    </footer>
+
+    <script src="js/app.js" defer></script>
+    <script src="js/data/posts.js" defer></script>
+    <script src="js/dataService.js" defer></script>
+    <script src="js/components/templates.js" defer></script>
+    <script src="js/pages/archive.js" defer></script>
+  </body>
+</html>

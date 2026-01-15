@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AIインサイトラボ | ホーム</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <header>
+      <div class="header-inner">
+        <a class="logo" href="index.html">AI Insight Lab</a>
+        <nav aria-label="メインナビゲーション">
+          <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="categories.html">Categories</a></li>
+            <li><a href="archive.html">Archive</a></li>
+            <li><a href="profile.html">Profile</a></li>
+          </ul>
+        </nav>
+        <button class="menu-toggle" aria-label="メニューを開閉" aria-expanded="false">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+      <div class="mobile-nav" aria-label="モバイルナビゲーション">
+        <a href="index.html">Home</a>
+        <a href="categories.html">Categories</a>
+        <a href="archive.html">Archive</a>
+        <a href="profile.html">Profile</a>
+      </div>
+    </header>
+
+    <main>
+      <div class="container">
+        <section class="hero">
+          <h1>AIとテックの“いま”を、ストレスなくキャッチアップ</h1>
+          <p>
+            投資・ビジネス・実務活用まで、AI初心者〜中級者のためのナレッジハブ。
+            最新ニュースからツール紹介まで、読むべき情報だけを厳選してお届けします。
+          </p>
+          <div class="hero-actions">
+            <a href="#latest" class="button primary">
+              <i class="fa-solid fa-tower-broadcast"></i> 最新記事を見る
+            </a>
+            <a href="categories.html" class="button secondary">
+              <i class="fa-solid fa-layer-group"></i> カテゴリから探す
+            </a>
+          </div>
+        </section>
+
+        <section id="recommended" aria-labelledby="recommended-title">
+          <div class="section-header">
+            <h2 id="recommended-title">おすすめ記事</h2>
+            <a href="archive.html">すべての記事を見る</a>
+          </div>
+          <div class="card-grid" data-recommended-list>
+            <div class="status-text">
+              <div class="loader" role="status" aria-label="読み込み中"></div>
+            </div>
+          </div>
+        </section>
+
+        <section aria-labelledby="category-quick-nav">
+          <div class="section-header">
+            <h2 id="category-quick-nav">カテゴリから探す</h2>
+          </div>
+          <div class="badge-grid" data-category-shortcuts></div>
+        </section>
+
+        <section id="latest" aria-labelledby="latest-title">
+          <div class="section-header">
+            <h2 id="latest-title">最新記事</h2>
+            <a href="archive.html">アーカイブ</a>
+          </div>
+          <div class="card-grid" data-latest-list>
+            <div class="status-text">
+              <div class="loader" role="status" aria-label="読み込み中"></div>
+            </div>
+          </div>
+          <div class="status-text" data-latest-status></div>
+          <div style="text-align: center; margin-top: 16px;">
+            <button class="button secondary" data-load-more>
+              <i class="fa-solid fa-plus"></i> もっと見る
+            </button>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer>
+      <div class="footer-inner">
+        <div class="footer-links">
+          <a href="https://www.instagram.com/" target="_blank" rel="noopener">Instagram</a>
+          <a href="https://coconala.com/" target="_blank" rel="noopener">ココナラ</a>
+          <a href="https://www.threads.net/" target="_blank" rel="noopener">Threads</a>
+        </div>
+        <p class="footer-copy">&copy; <span data-current-year></span> AI Insight Lab</p>
+      </div>
+    </footer>
+
+    <script src="js/app.js" defer></script>
+    <script src="js/data/posts.js" defer></script>
+    <script src="js/dataService.js" defer></script>
+    <script src="js/components/templates.js" defer></script>
+    <script src="js/pages/home.js" defer></script>
+  </body>
+</html>
