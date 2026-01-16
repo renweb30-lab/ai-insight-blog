@@ -15,7 +15,81 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css"
     />
-    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/style.css" />
+
+    <!-- style.cssに無い場合の保険（Genspark風） -->
+    <style>
+      .profile-card{
+        border: 1px solid rgba(148,163,184,.22);
+        background: rgba(2,6,23,.28);
+        border-radius: 18px;
+        padding: 18px;
+      }
+      .profile-header{
+        display:grid;
+        grid-template-columns: 84px 1fr;
+        gap: 16px;
+        align-items: start;
+        padding-bottom: 14px;
+        border-bottom: 1px solid rgba(148,163,184,.18);
+        margin-bottom: 14px;
+      }
+      .profile-avatar{
+        width: 84px;
+        height: 84px;
+        border-radius: 18px;
+        display:grid;
+        place-items:center;
+        border: 1px solid rgba(148,163,184,.25);
+        background: linear-gradient(180deg, rgba(124,92,255,.20), rgba(34,211,238,.12));
+        color: rgba(255,255,255,.92);
+        font-size: 28px;
+      }
+      .profile-role{
+        margin: 0;
+        font-size: 13px;
+        color: rgba(148,163,184,.95);
+      }
+      .profile-name{
+        margin: 6px 0 8px;
+        font-size: 22px;
+        letter-spacing: .2px;
+      }
+      .profile-lead{
+        margin: 0;
+        color: rgba(226,232,240,.92);
+        line-height: 1.85;
+      }
+      .profile-grid{
+        display:grid;
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+      @media (min-width: 900px){
+        .profile-grid{ grid-template-columns: 1fr 1fr; }
+        .profile-grid .profile-section:last-child{ grid-column: 1 / -1; }
+      }
+      .profile-section{
+        border: 1px solid rgba(148,163,184,.18);
+        background: rgba(15,23,42,.35);
+        border-radius: 16px;
+        padding: 14px 14px;
+      }
+      .profile-section h3{
+        margin: 0 0 10px;
+        font-size: 15px;
+        display:flex;
+        gap: 8px;
+        align-items:center;
+      }
+      .profile-section ul{
+        margin: 0;
+        padding-left: 18px;
+        color: rgba(226,232,240,.92);
+        line-height: 1.85;
+      }
+      .profile-section li{ margin: 6px 0; }
+    </style>
   </head>
 
   <body>
@@ -116,5 +190,25 @@
         <p class="footer-copy">&copy; <span data-current-year></span> AI Insight Lab</p>
       </div>
     </footer>
+
+    <script>
+      // 年
+      document.querySelectorAll("[data-current-year]").forEach((el) => {
+        el.textContent = String(new Date().getFullYear());
+      });
+
+      // モバイルメニュー
+      (function setupMenu() {
+        const btn = document.querySelector(".menu-toggle");
+        const mobile = document.querySelector(".mobile-nav");
+        if (!btn || !mobile) return;
+
+        btn.addEventListener("click", () => {
+          const opened = btn.getAttribute("aria-expanded") === "true";
+          btn.setAttribute("aria-expanded", String(!opened));
+          mobile.style.display = opened ? "none" : "block";
+        });
+      })();
+    </script>
   </body>
 </html>
