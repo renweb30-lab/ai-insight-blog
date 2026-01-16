@@ -29,7 +29,7 @@ export default async function handler(req, res) {
         publishedAt: p.publishedAt || p.createdAt,
         categoryId: normalizedCategoryId || "ai-news",
         summary: p.summary || "",
-        content: p.body || "",
+        content: p.content || "",
         eyecatchUrl: p.eyecatch?.url || "",
       };
     });
