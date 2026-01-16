@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AIインサイトラボ | プロフィール</title>
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -16,6 +17,7 @@
     />
     <link rel="stylesheet" href="css/style.css" />
   </head>
+
   <body>
     <header>
       <div class="header-inner">
@@ -42,57 +44,65 @@
 
     <main>
       <div class="container">
-        <div class="profile-card">
+        <section class="hero" style="margin-bottom: 32px;">
+          <h1>運営プロフィール</h1>
+          <p>AI活用・AIニュース・投資×AIなどを“わかりやすく”まとめる場所です。</p>
+          <div class="hero-actions">
+            <a class="button primary" href="https://www.instagram.com/" target="_blank" rel="noopener">
+              <i class="fa-brands fa-instagram"></i> Instagram
+            </a>
+            <a class="button secondary" href="https://coconala.com/" target="_blank" rel="noopener">
+              <i class="fa-solid fa-store"></i> ココナラ
+            </a>
+            <a class="button secondary" href="https://www.threads.net/" target="_blank" rel="noopener">
+              <i class="fa-brands fa-threads"></i> Threads
+            </a>
+          </div>
+        </section>
+
+        <section class="profile-card" aria-label="プロフィール詳細">
           <div class="profile-header">
-            <div class="profile-image" aria-hidden="true">AI</div>
+            <div class="profile-avatar" aria-hidden="true">
+              <i class="fa-solid fa-user"></i>
+            </div>
             <div>
-              <h1 style="margin: 0 0 6px;">運営者プロフィール</h1>
-              <p style="margin: 0; color: var(--color-muted);">
-                AIリサーチャー / コンテンツストラテジスト
+              <p class="profile-role">AI × 生活 × 成果</p>
+              <h2 class="profile-name">Ren</h2>
+              <p class="profile-lead">
+                AI初心者でも「今日から使える」実践を中心に。勉強・仕事・副業をラクに、成果が出る方向へ。
               </p>
             </div>
           </div>
 
-          <div class="profile-section">
-            <h3>ミッション</h3>
-            <p>
-              AIに関する情報の非対称性をなくし、誰もが必要なインサイトにアクセスできる環境をつくることを目指しています。
-              「わかりやすく・使いやすい」コンテンツ設計で、明日からのアクションにつながる学びを提供します。
-            </p>
-          </div>
+          <div class="profile-grid">
+            <div class="profile-section">
+              <h3><i class="fa-solid fa-bullseye"></i> このサイトで届けたいこと</h3>
+              <ul>
+                <li>AIツールの具体的な使い方（時短・効率化）</li>
+                <li>AIニュースの要点まとめ（忙しくても追える）</li>
+                <li>AI×投資・ビジネスの「実務目線」</li>
+              </ul>
+            </div>
 
-          <div class="profile-section">
-            <h3>これまでの歩み</h3>
-            <ul style="margin: 0; padding-left: 18px; color: var(--color-muted);">
-              <li>大手IT企業でAI活用プロジェクトのPMとして従事</li>
-              <li>Notionを活用したナレッジマネジメント支援を複数社で実施</li>
-              <li>個人投資家向けにAI関連銘柄レポートを定期配信中</li>
-            </ul>
-          </div>
+            <div class="profile-section">
+              <h3><i class="fa-solid fa-route"></i> 発信スタイル</h3>
+              <ul>
+                <li>1記事で「要点→背景→実務への落とし込み」</li>
+                <li>専門用語は噛み砕く（でも薄くしない）</li>
+                <li>忙しい人が“迷わず行動できる”形に</li>
+              </ul>
+            </div>
 
-          <div class="profile-section">
-            <h3>サイトの使い方</h3>
-            <p>
-              トップページでは最新の記事とおすすめ記事をまとめています。カテゴリページでは、関心のあるテーマを選んで関連記事をまとめてチェックできます。
-              アーカイブでは月ごとに記事を振り返ることが可能です。
-            </p>
-          </div>
-
-          <div class="profile-section">
-            <h3>外部リンク</h3>
-            <div class="profile-links">
-              <a href="https://www.instagram.com/" target="_blank" rel="noopener">
-                <i class="fa-brands fa-instagram"></i> Instagram
-              </a>
-              <a href="https://coconala.com/" target="_blank" rel="noopener">
-                <i class="fa-solid fa-store"></i> ココナラ
-              </a>
-              <a href="https://www.threads.net/" target="_blank" rel="noopener">
-                <i class="fa-brands fa-threads"></i> Threads
-              </a>
+            <div class="profile-section">
+              <h3><i class="fa-solid fa-link"></i> リンク</h3>
+              <div class="footer-links" style="justify-content:flex-start; gap:14px;">
+                <a href="https://www.instagram.com/" target="_blank" rel="noopener">Instagram</a>
+                <a href="https://coconala.com/" target="_blank" rel="noopener">ココナラ</a>
+                <a href="https://www.threads.net/" target="_blank" rel="noopener">Threads</a>
+              </div>
             </div>
           </div>
-        </div>
+        </section>
       </div>
     </main>
 
