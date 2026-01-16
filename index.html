@@ -15,7 +15,7 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css"
     />
-    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/style.css" />
   </head>
 
   <body>
@@ -34,6 +34,7 @@
           <i class="fa-solid fa-bars"></i>
         </button>
       </div>
+
       <div class="mobile-nav" aria-label="モバイルナビゲーション">
         <a href="index.html">Home</a>
         <a href="categories.html">Categories</a>
@@ -102,7 +103,6 @@
     <footer>
       <div class="footer-inner">
         <div class="footer-links">
-          <!-- 必要ならあなたの実URLに差し替え -->
           <a href="https://www.instagram.com/" target="_blank" rel="noopener">Instagram</a>
           <a href="https://coconala.com/" target="_blank" rel="noopener">ココナラ</a>
           <a href="https://www.threads.net/" target="_blank" rel="noopener">Threads</a>
@@ -110,5 +110,148 @@
         <p class="footer-copy">&copy; <span data-current-year></span> AI Insight Lab</p>
       </div>
     </footer>
+
+    <!-- ✅ ここからが「記事復活」に必要 -->
+    <script>
+      // 年
+      document.querySelectorAll("[data-current-year]").forEach((el) => {
+        el.textContent = String(new Date().getFullYear());
+      });
+
+      // モバイルメニュー
+      (function setupMenu() {
+        const btn = document.querySelector(".menu-toggle");
+        const mobile = document.querySelector(".mobile-nav");
+        if (!btn || !mobile) return;
+
+        btn.addEventListener("click", () => {
+          const opened = btn.getAttribute("aria-expanded") === "true";
+          btn.setAttribute("aria-expanded", String(!opened));
+          mobile.style.display = opened ? "none" : "block";
+        });
+      })();
+
+      // microCMS proxy (/api/posts) から取得して描画
+      const CATEGORY_LABEL = {
+        "ai-stocks": "AI株情報",
+        "ai-intro": "AI使い方入門",
+        "ai-tools": "AIツール紹介",
+        "ai-news": "AI関連ニュース",
+      };
+
+      function escapeHtml(s) {
+        return String(s ?? "")
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#39;");
+      }
+
+      function fmtDate(iso) {
+        try {
+          return new Date(iso).toLocaleDateString("ja-JP");
+        } catch {
+          return iso || "";
+        }
+      }
+
+      function cardHtml(p) {
+        const cat = p.categoryId;
+        const catLabel = CATEGORY_LABEL[cat] || cat || "";
+        const href = `post.html?id=${encodeURIComponent(p.id)}`;
+
+        return `
+          <article class="card">
+            <div class="meta">
+              ${catLabel ? `<span class="badge"><i class="fa-solid fa-hashtag"></i> ${escapeHtml(catLabel)}</span>` : ""}
+              <span><i class="fa-regular fa-calendar"></i> ${escapeHtml(fmtDate(p.publishedAt))}</span>
+            </div>
+
+            <a class="title-link" href="${href}">
+              ${escapeHtml(p.title || "")}
+            </a>
+
+            ${p.eyecatchUrl ? `<img class="thumb" src="${escapeHtml(p.eyecatchUrl)}" alt="" loading="lazy" />` : ""}
+
+            ${p.summary ? `<p class="muted">${escapeHtml(p.summary)}</p>` : ""}
+          </article>
+        `;
+      }
+
+      async function fetchPosts() {
+        const r = await fetch("/api/posts", { cache: "no-store" });
+        if (!r.ok) throw new Error("Failed to fetch /api/posts");
+        const data = await r.json();
+        return data.posts || [];
+      }
+
+      (async function boot() {
+        const recEl = document.querySelector("[data-recommended-list]");
+        const latestEl = document.querySelector("[data-latest-list]");
+        const catEl = document.querySelector("[data-category-shortcuts]");
+        const statusEl = document.querySelector("[data-latest-status]");
+        const moreBtn = document.querySelector("[data-load-more]");
+
+        let allPosts = [];
+        let shown = 0;
+        const PAGE_SIZE = 6;
+
+        function renderRecommended() {
+          if (!recEl) return;
+          const pick = allPosts.slice(0, 4); // とりあえず先頭4つ
+          recEl.innerHTML = pick.length ? pick.map(cardHtml).join("") : `<p class="status-text">記事がありません</p>`;
+        }
+
+        function renderCategories() {
+          if (!catEl) return;
+          const uniq = Array.from(new Set(allPosts.map((p) => (Array.isArray(p.categoryId) ? p.categoryId[0] : p.categoryId)).filter(Boolean)));
+          catEl.innerHTML = uniq
+            .map((id) => {
+              const label = CATEGORY_LABEL[id] || id;
+              return `<a class="badge" href="categories.html?category=${encodeURIComponent(id)}">${escapeHtml(label)}</a>`;
+            })
+            .join("");
+        }
+
+        function renderLatest(reset = false) {
+          if (!latestEl) return;
+
+          if (reset) {
+            shown = 0;
+            latestEl.innerHTML = "";
+          }
+
+          const next = allPosts.slice(shown, shown + PAGE_SIZE);
+          shown += next.length;
+
+          if (reset && next.length === 0) {
+            latestEl.innerHTML = `<p class="status-text">記事がありません</p>`;
+          } else {
+            latestEl.insertAdjacentHTML("beforeend", next.map(cardHtml).join(""));
+          }
+
+          if (moreBtn) {
+            moreBtn.style.display = shown < allPosts.length ? "inline-flex" : "none";
+          }
+          if (statusEl) statusEl.textContent = "";
+        }
+
+        try {
+          allPosts = await fetchPosts();
+          renderRecommended();
+          renderCategories();
+          renderLatest(true);
+
+          if (moreBtn) {
+            moreBtn.addEventListener("click", () => renderLatest(false));
+          }
+        } catch (e) {
+          if (recEl) recEl.innerHTML = `<p class="status-text">読み込みに失敗しました</p>`;
+          if (latestEl) latestEl.innerHTML = `<p class="status-text">読み込みに失敗しました</p>`;
+          if (statusEl) statusEl.textContent = String(e);
+        }
+      })();
+    </script>
   </body>
 </html>
