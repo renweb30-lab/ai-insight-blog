@@ -16,6 +16,7 @@
     />
     <link rel="stylesheet" href="css/style.css" />
   </head>
+  
   <body>
     <header>
       <div class="header-inner">
@@ -113,5 +114,77 @@
     <script src="js/dataService.js" defer></script>
     <script src="js/components/templates.js" defer></script>
     <script src="js/pages/home.js" defer></script>
+    <!-- 最新記事の表示場所 -->
+<div id="latest-posts"></div>
+
+<script>
+async function loadPosts() {
+  const r = await fetch("/api/posts", { cache: "no-store" });
+  const data = await r.json();
+  return data.posts || [];
+}
+
+function categoryLabel(id) {
+  const map = {
+    "ai-stocks": "AI株情報",
+    "ai-intro": "AI使い方入門",
+    "ai-tools": "AIツール紹介",
+    "ai-news": "AI関連ニュース",
+  };
+  return map[id] || id || "";
+}
+
+function escapeHtml(s) {
+  return String(s ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
+function fmtDate(iso) {
+  try {
+    return new Date(iso).toLocaleDateString("ja-JP", { year: "numeric", month: "2-digit", day: "2-digit" });
+  } catch {
+    return iso || "";
+  }
+}
+
+async function renderLatestPosts() {
+  const el = document.getElementById("latest-posts");
+  if (!el) return;
+
+  el.innerHTML = "読み込み中...";
+
+  const posts = await loadPosts();
+
+  if (posts.length === 0) {
+    el.innerHTML = "記事がまだありません";
+    return;
+  }
+
+  el.innerHTML = posts.map(p => `
+    <article style="padding:16px 0; border-bottom:1px solid rgba(0,0,0,0.12);">
+      <div style="font-size:12px; opacity:0.8;">
+        ${escapeHtml(categoryLabel(p.categoryId))} / ${escapeHtml(fmtDate(p.publishedAt))}
+      </div>
+
+      <h3 style="margin:8px 0;">
+        <a href="/post.html?id=${encodeURIComponent(p.id)}" style="text-decoration:none;">
+          ${escapeHtml(p.title)}
+        </a>
+      </h3>
+
+      ${p.eyecatchUrl ? `<img src="${escapeHtml(p.eyecatchUrl)}" alt="" style="width:100%; max-width:720px; border-radius:12px; margin:10px 0;" />` : ""}
+
+      ${p.summary ? `<p style="opacity:0.9;">${escapeHtml(p.summary)}</p>` : ""}
+    </article>
+  `).join("");
+}
+
+document.addEventListener("DOMContentLoaded", renderLatestPosts);
+</script>
+
   </body>
 </html>
