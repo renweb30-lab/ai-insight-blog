@@ -17,19 +17,23 @@ export default async function handler(req, res) {
 
     const data = await r.json();
 
-    // あなたの静的サイトが使いやすい形に整形
-    const posts = (data.contents || []).map((p) => ({
-      id: p.id,
-      slug: p.slug || p.id,
-      title: p.title,
-      publishedAt: p.publishedAt || p.createdAt,
-      categoryId: p.categoryId || "ai-news",
-      summary: p.summary || "",
-      content: p.body || "",
-      eyecatchUrl: p.eyecatch?.url || "",
-    }));
+    const posts = (data.contents || []).map((p) => {
+      const normalizedCategoryId = Array.isArray(p.categoryId)
+        ? p.categoryId[0]
+        : p.categoryId;
 
-    // キャッシュ（速く＆API節約）
+      return {
+        id: p.id,
+        slug: p.slug || p.id,
+        title: p.title,
+        publishedAt: p.publishedAt || p.createdAt,
+        categoryId: normalizedCategoryId || "ai-news",
+        summary: p.summary || "",
+        content: p.body || "",
+        eyecatchUrl: p.eyecatch?.url || "",
+      };
+    });
+
     res.setHeader("Cache-Control", "s-maxage=60, stale-while-revalidate=300");
     return res.status(200).json({ posts });
   } catch (e) {
