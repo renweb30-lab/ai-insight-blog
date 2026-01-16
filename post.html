@@ -3,130 +3,120 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>記事</title>
+  <title>記事 | AI Insight Lab</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap"
+    rel="stylesheet"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css"
+  />
+  <link rel="stylesheet" href="css/style.css" />
+
+  <!-- 記事本文だけ、追加の見た目を整える（Genspark風） -->
   <style>
-  :root{
-    --bg:#0b1020;
-    --panel:rgba(255,255,255,.06);
-    --panel2:rgba(255,255,255,.09);
-    --text:rgba(255,255,255,.92);
-    --muted:rgba(255,255,255,.70);
-    --border:rgba(255,255,255,.12);
-    --accent:#7c5cff;
-    --accent2:#22d3ee;
-  }
-  *{box-sizing:border-box}
-  body{
-    margin:0;
-    font-family: Inter, system-ui, -apple-system, "Noto Sans JP", sans-serif;
-    color:var(--text);
-    background: radial-gradient(1200px 700px at 10% 0%, rgba(124,92,255,.25), transparent 55%),
-                radial-gradient(900px 600px at 90% 10%, rgba(34,211,238,.22), transparent 55%),
-                var(--bg);
-    line-height:1.7;
-  }
-  a{color:inherit}
-  .container{max-width:980px;margin:0 auto;padding:28px 18px 80px}
-  .topbar{
-    display:flex; align-items:center; justify-content:space-between;
-    gap:12px; margin-bottom:22px;
-  }
-  .brand{
-    font-weight:800; letter-spacing:.2px;
-    font-size:18px; text-decoration:none;
-  }
-  .nav a{
-    color:var(--muted); text-decoration:none; margin-left:14px;
-    font-size:14px;
-  }
-  .nav a:hover{color:var(--text)}
-  .hero{
-    padding:22px 18px;
-    border:1px solid var(--border);
-    background:linear-gradient(180deg, var(--panel), transparent);
-    border-radius:18px;
-    box-shadow: 0 12px 40px rgba(0,0,0,.25);
-    margin-bottom:18px;
-  }
-  .hero h1{margin:0 0 8px;font-size:28px;letter-spacing:.3px}
-  .hero p{margin:0;color:var(--muted)}
-  .grid{display:grid; grid-template-columns: repeat(12, 1fr); gap:16px}
-  .card{
-    grid-column: span 12;
-    padding:16px;
-    border:1px solid var(--border);
-    background:var(--panel);
-    border-radius:16px;
-  }
-  @media (min-width: 900px){
-    .card{grid-column: span 6}
-  }
-  .meta{font-size:12px;color:var(--muted); display:flex; gap:10px; align-items:center; flex-wrap:wrap}
-  .badge{
-    display:inline-flex; align-items:center; gap:6px;
-    padding:4px 10px; border-radius:999px;
-    background:rgba(124,92,255,.18);
-    border:1px solid rgba(124,92,255,.35);
-    color:rgba(255,255,255,.9);
-    font-size:12px;
-  }
-  .title-link{
-    text-decoration:none;
-    display:block;
-    margin:10px 0 8px;
-    font-size:18px;
-    font-weight:700;
-    letter-spacing:.2px;
-  }
-  .title-link:hover{opacity:.92}
-  .thumb{
-    width:100%; aspect-ratio: 16/9; object-fit:cover;
-    border-radius:14px; border:1px solid var(--border);
-    margin:10px 0;
-  }
-  .muted{color:var(--muted)}
-  .btn-back{
-    display:inline-flex; align-items:center; gap:8px;
-    color:var(--muted); text-decoration:none;
-    padding:10px 12px; border-radius:12px;
-    border:1px solid var(--border);
-    background:rgba(255,255,255,.04);
-    margin-bottom:16px;
-  }
-  .btn-back:hover{color:var(--text); background:rgba(255,255,255,.06)}
-  /* article content */
-  .prose{
-    padding:18px;
-    border:1px solid var(--border);
-    background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-    border-radius:18px;
-  }
-  .prose h2{margin:18px 0 8px;font-size:20px}
-  .prose h3{margin:14px 0 6px;font-size:16px;color:rgba(255,255,255,.90)}
-  .prose p{margin:10px 0;color:rgba(255,255,255,.88)}
-  .prose a{color:var(--accent2); text-decoration:none}
-  .prose a:hover{text-decoration:underline}
-  .prose ul{margin:10px 0 10px 22px}
-  .prose li{margin:6px 0}
-  .prose hr{border:none; height:1px; background:var(--border); margin:18px 0}
-  .prose blockquote{
-    margin:14px 0; padding:10px 14px;
-    border-left:3px solid rgba(34,211,238,.6);
-    background:rgba(34,211,238,.08);
-    border-radius:12px;
-    color:rgba(255,255,255,.88);
-  }
-</style>
-
-  
+    .post-wrap { display: grid; gap: 16px; }
+    .post-topbar { display:flex; align-items:center; gap:12px; color: var(--muted, #64748b); }
+    .post-topbar a { text-decoration:none; }
+    .post-hero {
+      padding: 18px 18px;
+      border-radius: 16px;
+      border: 1px solid rgba(148,163,184,.25);
+      background: linear-gradient(180deg, rgba(15,23,42,.75), rgba(15,23,42,.55));
+    }
+    .post-title { margin: 0; font-size: 24px; letter-spacing: .2px; }
+    .post-meta { margin-top: 10px; display:flex; gap:12px; flex-wrap:wrap; color:#94a3b8; font-size: 13px; }
+    .post-eyecatch { width:100%; border-radius: 14px; margin-top: 14px; border:1px solid rgba(148,163,184,.25); overflow:hidden; }
+    .post-eyecatch img { width:100%; display:block; }
+    .post-prose {
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid rgba(148,163,184,.25);
+      background: rgba(2,6,23,.35);
+      line-height: 1.9;
+    }
+    .post-prose h2 { margin: 18px 0 10px; font-size: 20px; }
+    .post-prose h3 { margin: 16px 0 8px; font-size: 16px; color:#e2e8f0; }
+    .post-prose p { margin: 10px 0; color:#e2e8f0; }
+    .post-prose a { color: #38bdf8; text-decoration: none; }
+    .post-prose a:hover { text-decoration: underline; }
+    .post-prose ul { margin: 10px 0 10px 22px; }
+    .post-prose li { margin: 6px 0; }
+    .post-prose hr { border: 0; height: 1px; background: rgba(148,163,184,.25); margin: 18px 0; }
+    .post-prose blockquote {
+      margin: 14px 0;
+      padding: 12px 14px;
+      border-left: 3px solid rgba(56,189,248,.8);
+      background: rgba(56,189,248,.12);
+      border-radius: 12px;
+      color:#e2e8f0;
+    }
+  </style>
 </head>
-<body>
-  <a href="/" style="display:inline-block; margin:16px 0;">← 戻る</a>
-  <div id="post"></div>
 
+<body>
+  <header>
+    <div class="header-inner">
+      <a class="logo" href="index.html">AI Insight Lab</a>
+      <nav aria-label="メインナビゲーション">
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="categories.html">Categories</a></li>
+          <li><a href="archive.html">Archive</a></li>
+          <li><a href="profile.html">Profile</a></li>
+        </ul>
+      </nav>
+      <button class="menu-toggle" aria-label="メニューを開閉" aria-expanded="false">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+    </div>
+    <div class="mobile-nav" aria-label="モバイルナビゲーション">
+      <a href="index.html">Home</a>
+      <a href="categories.html">Categories</a>
+      <a href="archive.html">Archive</a>
+      <a href="profile.html">Profile</a>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <div class="post-wrap">
+        <div class="post-topbar">
+          <a class="button secondary" href="index.html" style="padding:10px 12px;">
+            <i class="fa-solid fa-arrow-left"></i> 戻る
+          </a>
+          <span class="status-text" id="post-status"></span>
+        </div>
+
+        <article id="post" class="post-hero" aria-live="polite">
+          <div class="status-text">
+            <div class="loader" role="status" aria-label="読み込み中"></div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-links">
+        <a href="https://www.instagram.com/" target="_blank" rel="noopener">Instagram</a>
+        <a href="https://coconala.com/" target="_blank" rel="noopener">ココナラ</a>
+        <a href="https://www.threads.net/" target="_blank" rel="noopener">Threads</a>
+      </div>
+      <p class="footer-copy">&copy; <span data-current-year></span> AI Insight Lab</p>
+    </div>
+  </footer>
+
+  <script src="js/app.js" defer></script>
   <script>
     async function loadPost(id) {
       const r = await fetch("/api/posts", { cache: "no-store" });
+      if (!r.ok) throw new Error("Failed to fetch /api/posts");
       const data = await r.json();
       const posts = data.posts || [];
       return posts.find(p => p.id === id) || null;
@@ -153,28 +143,45 @@
       const params = new URLSearchParams(location.search);
       const id = params.get("id");
       const el = document.getElementById("post");
+      const status = document.getElementById("post-status");
 
       if (!id) {
-        el.innerHTML = "記事IDがありません";
+        el.innerHTML = `<p class="status-text">記事IDがありません</p>`;
         return;
       }
 
-      el.innerHTML = "読み込み中...";
-      const p = await loadPost(id);
+      try {
+        const p = await loadPost(id);
+        if (!p) {
+          el.innerHTML = `<p class="status-text">記事が見つかりません</p>`;
+          return;
+        }
 
-      if (!p) {
-        el.innerHTML = "記事が見つかりません";
-        return;
+        document.title = `${p.title || "記事"} | AI Insight Lab`;
+
+        el.innerHTML = `
+          <h1 class="post-title">${escapeHtml(p.title)}</h1>
+          <div class="post-meta">
+            <span><i class="fa-regular fa-calendar"></i> ${escapeHtml(fmtDate(p.publishedAt))}</span>
+            ${p.categoryId ? `<span><i class="fa-solid fa-hashtag"></i> ${escapeHtml(p.categoryId)}</span>` : ""}
+          </div>
+
+          ${p.eyecatchUrl ? `
+            <div class="post-eyecatch">
+              <img src="${escapeHtml(p.eyecatchUrl)}" alt="" />
+            </div>
+          ` : ""}
+
+          <div class="post-prose">
+            ${p.content ? p.content : "<p>本文がまだ設定されていません</p>"}
+          </div>
+        `;
+
+        if (status) status.textContent = "";
+      } catch (e) {
+        el.innerHTML = `<p class="status-text">読み込みに失敗しました</p>`;
+        if (status) status.textContent = String(e);
       }
-
-      document.title = p.title || "記事";
-
-      el.innerHTML = `
-        <h1>${escapeHtml(p.title)}</h1>
-        <div style="opacity:0.8; margin:8px 0;">${escapeHtml(fmtDate(p.publishedAt))}</div>
-        ${p.eyecatchUrl ? `<img src="${escapeHtml(p.eyecatchUrl)}" alt="" style="width:100%; max-width:900px; border-radius:12px; margin:12px 0;" />` : ""}
-        ${p.content ? `<div class="prose">${p.content}</div>` : "<p>本文がまだ設定されていません</p>"}
-      `;
     })();
   </script>
 </body>
