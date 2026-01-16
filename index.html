@@ -4,6 +4,120 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AIインサイトラボ | ホーム</title>
+    <style>
+  :root{
+    --bg:#0b1020;
+    --panel:rgba(255,255,255,.06);
+    --panel2:rgba(255,255,255,.09);
+    --text:rgba(255,255,255,.92);
+    --muted:rgba(255,255,255,.70);
+    --border:rgba(255,255,255,.12);
+    --accent:#7c5cff;
+    --accent2:#22d3ee;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family: Inter, system-ui, -apple-system, "Noto Sans JP", sans-serif;
+    color:var(--text);
+    background: radial-gradient(1200px 700px at 10% 0%, rgba(124,92,255,.25), transparent 55%),
+                radial-gradient(900px 600px at 90% 10%, rgba(34,211,238,.22), transparent 55%),
+                var(--bg);
+    line-height:1.7;
+  }
+  a{color:inherit}
+  .container{max-width:980px;margin:0 auto;padding:28px 18px 80px}
+  .topbar{
+    display:flex; align-items:center; justify-content:space-between;
+    gap:12px; margin-bottom:22px;
+  }
+  .brand{
+    font-weight:800; letter-spacing:.2px;
+    font-size:18px; text-decoration:none;
+  }
+  .nav a{
+    color:var(--muted); text-decoration:none; margin-left:14px;
+    font-size:14px;
+  }
+  .nav a:hover{color:var(--text)}
+  .hero{
+    padding:22px 18px;
+    border:1px solid var(--border);
+    background:linear-gradient(180deg, var(--panel), transparent);
+    border-radius:18px;
+    box-shadow: 0 12px 40px rgba(0,0,0,.25);
+    margin-bottom:18px;
+  }
+  .hero h1{margin:0 0 8px;font-size:28px;letter-spacing:.3px}
+  .hero p{margin:0;color:var(--muted)}
+  .grid{display:grid; grid-template-columns: repeat(12, 1fr); gap:16px}
+  .card{
+    grid-column: span 12;
+    padding:16px;
+    border:1px solid var(--border);
+    background:var(--panel);
+    border-radius:16px;
+  }
+  @media (min-width: 900px){
+    .card{grid-column: span 6}
+  }
+  .meta{font-size:12px;color:var(--muted); display:flex; gap:10px; align-items:center; flex-wrap:wrap}
+  .badge{
+    display:inline-flex; align-items:center; gap:6px;
+    padding:4px 10px; border-radius:999px;
+    background:rgba(124,92,255,.18);
+    border:1px solid rgba(124,92,255,.35);
+    color:rgba(255,255,255,.9);
+    font-size:12px;
+  }
+  .title-link{
+    text-decoration:none;
+    display:block;
+    margin:10px 0 8px;
+    font-size:18px;
+    font-weight:700;
+    letter-spacing:.2px;
+  }
+  .title-link:hover{opacity:.92}
+  .thumb{
+    width:100%; aspect-ratio: 16/9; object-fit:cover;
+    border-radius:14px; border:1px solid var(--border);
+    margin:10px 0;
+  }
+  .muted{color:var(--muted)}
+  .btn-back{
+    display:inline-flex; align-items:center; gap:8px;
+    color:var(--muted); text-decoration:none;
+    padding:10px 12px; border-radius:12px;
+    border:1px solid var(--border);
+    background:rgba(255,255,255,.04);
+    margin-bottom:16px;
+  }
+  .btn-back:hover{color:var(--text); background:rgba(255,255,255,.06)}
+  /* article content */
+  .prose{
+    padding:18px;
+    border:1px solid var(--border);
+    background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+    border-radius:18px;
+  }
+  .prose h2{margin:18px 0 8px;font-size:20px}
+  .prose h3{margin:14px 0 6px;font-size:16px;color:rgba(255,255,255,.90)}
+  .prose p{margin:10px 0;color:rgba(255,255,255,.88)}
+  .prose a{color:var(--accent2); text-decoration:none}
+  .prose a:hover{text-decoration:underline}
+  .prose ul{margin:10px 0 10px 22px}
+  .prose li{margin:6px 0}
+  .prose hr{border:none; height:1px; background:var(--border); margin:18px 0}
+  .prose blockquote{
+    margin:14px 0; padding:10px 14px;
+    border-left:3px solid rgba(34,211,238,.6);
+    background:rgba(34,211,238,.08);
+    border-radius:12px;
+    color:rgba(255,255,255,.88);
+  }
+</style>
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
