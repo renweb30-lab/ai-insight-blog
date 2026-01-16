@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AIインサイトラボ | プロフィール</title>
+    <title>Ren AI Lab | プロフィール</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -17,49 +17,74 @@
     />
     <link rel="stylesheet" href="/style.css" />
 
-    <!-- style.cssに無い場合の保険（Genspark風） -->
+    <!-- profile専用：白基調でGensparkっぽく「信用ページ」にする -->
     <style>
-      .profile-card{
-        border: 1px solid rgba(148,163,184,.22);
-        background: rgba(2,6,23,.28);
-        border-radius: 18px;
-        padding: 18px;
+      .hero.profile-hero{
+        background: radial-gradient(900px 500px at 20% 20%, rgba(56,189,248,.24), transparent 60%),
+                    radial-gradient(900px 500px at 80% 0%, rgba(14,165,233,.18), transparent 55%),
+                    linear-gradient(135deg, rgba(255,255,255,.9), rgba(255,255,255,.75));
+        border: 1px solid rgba(226,232,240,.9);
+        box-shadow: 0 18px 50px rgba(15,23,42,.08);
       }
+      .hero.profile-hero p{ color:#334155; }
+
+      .profile-card{
+        background: rgba(255,255,255,.92);
+        border: 1px solid rgba(226,232,240,.95);
+        border-radius: 24px;
+        padding: 26px;
+        box-shadow: 0 22px 60px rgba(15, 23, 42, 0.10);
+      }
+
       .profile-header{
         display:grid;
-        grid-template-columns: 84px 1fr;
-        gap: 16px;
+        grid-template-columns: 96px 1fr;
+        gap: 18px;
         align-items: start;
-        padding-bottom: 14px;
-        border-bottom: 1px solid rgba(148,163,184,.18);
-        margin-bottom: 14px;
+        padding-bottom: 18px;
+        border-bottom: 1px solid rgba(226,232,240,.95);
+        margin-bottom: 18px;
       }
+
       .profile-avatar{
-        width: 84px;
-        height: 84px;
-        border-radius: 18px;
-        display:grid;
-        place-items:center;
-        border: 1px solid rgba(148,163,184,.25);
-        background: linear-gradient(180deg, rgba(124,92,255,.20), rgba(34,211,238,.12));
-        color: rgba(255,255,255,.92);
-        font-size: 28px;
+        width: 96px;
+        height: 96px;
+        border-radius: 24px;
+        overflow: hidden;
+        border: 1px solid rgba(226,232,240,.95);
+        box-shadow: 0 14px 34px rgba(15,23,42,.12);
+        background: #fff;
       }
+      .profile-avatar img{
+        width:100%;
+        height:100%;
+        object-fit: cover;
+        display:block;
+      }
+
       .profile-role{
         margin: 0;
-        font-size: 13px;
-        color: rgba(148,163,184,.95);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: .14em;
+        color: #0ea5e9;
+        text-transform: uppercase;
       }
+
       .profile-name{
-        margin: 6px 0 8px;
-        font-size: 22px;
+        margin: 6px 0 10px;
+        font-size: 26px;
         letter-spacing: .2px;
+        color:#0b1120;
       }
+
       .profile-lead{
         margin: 0;
-        color: rgba(226,232,240,.92);
-        line-height: 1.85;
+        color: #334155;
+        line-height: 1.9;
+        font-size: 0.98rem;
       }
+
       .profile-grid{
         display:grid;
         grid-template-columns: 1fr;
@@ -69,39 +94,65 @@
         .profile-grid{ grid-template-columns: 1fr 1fr; }
         .profile-grid .profile-section:last-child{ grid-column: 1 / -1; }
       }
+
       .profile-section{
-        border: 1px solid rgba(148,163,184,.18);
-        background: rgba(15,23,42,.35);
-        border-radius: 16px;
-        padding: 14px 14px;
+        border: 1px solid rgba(226,232,240,.95);
+        background: linear-gradient(180deg, rgba(248,250,252,.95), rgba(255,255,255,.95));
+        border-radius: 18px;
+        padding: 16px 16px;
       }
+
       .profile-section h3{
         margin: 0 0 10px;
         font-size: 15px;
         display:flex;
-        gap: 8px;
+        gap: 10px;
         align-items:center;
+        color:#0b1120;
       }
+
       .profile-section ul{
         margin: 0;
         padding-left: 18px;
-        color: rgba(226,232,240,.92);
-        line-height: 1.85;
+        color: #334155;
+        line-height: 1.9;
       }
-      .profile-section li{ margin: 6px 0; }
+      .profile-section li{ margin: 8px 0; }
+
+      /* 追加：プロフィール内リンクをボタンっぽく */
+      .profile-links{
+        display:flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 10px;
+      }
+      .profile-links a{
+        display:inline-flex;
+        align-items:center;
+        gap: 8px;
+        padding: 10px 14px;
+        border-radius: 999px;
+        border: 1px solid rgba(14,165,233,.35);
+        background: rgba(56,189,248,.08);
+        font-weight: 700;
+        color: #0ea5e9;
+      }
+      .profile-links a:hover{
+        background: rgba(14,165,233,.12);
+      }
     </style>
   </head>
 
   <body>
     <header>
       <div class="header-inner">
-        <a class="logo" href="index.html">AI Insight Lab</a>
+        <a class="logo" href="index.html">Ren AI Lab</a>
         <nav aria-label="メインナビゲーション">
           <ul class="nav-links">
             <li><a href="index.html">Home</a></li>
             <li><a href="categories.html">Categories</a></li>
             <li><a href="archive.html">Archive</a></li>
-            <li><a href="profile.html">Profile</a></li>
+            <li><a href="profile.html" class="is-active">Profile</a></li>
           </ul>
         </nav>
         <button class="menu-toggle" aria-label="メニューを開閉" aria-expanded="false">
@@ -112,15 +163,18 @@
         <a href="index.html">Home</a>
         <a href="categories.html">Categories</a>
         <a href="archive.html">Archive</a>
-        <a href="profile.html">Profile</a>
+        <a href="profile.html" class="is-active">Profile</a>
       </div>
     </header>
 
     <main>
       <div class="container">
-        <section class="hero" style="margin-bottom: 32px;">
+        <section class="hero profile-hero" style="margin-bottom: 32px;">
           <h1>運営プロフィール</h1>
-          <p>AI活用・AIニュース・投資×AIなどを“わかりやすく”まとめる場所です。</p>
+          <p>
+            AIを「知ってる」で終わらせず、<strong>今日から使える</strong>形にして届ける。
+            忙しくても迷わずキャッチアップできる“実践メディア”です。
+          </p>
           <div class="hero-actions">
             <a class="button primary" href="https://www.instagram.com/" target="_blank" rel="noopener">
               <i class="fa-brands fa-instagram"></i> Instagram
@@ -137,14 +191,39 @@
         <section class="profile-card" aria-label="プロフィール詳細">
           <div class="profile-header">
             <div class="profile-avatar" aria-hidden="true">
-              <i class="fa-solid fa-user"></i>
+              <!-- ★ここにあなたのアイコン画像を置く -->
+              <img src="/profile-icon.png" alt="Ren アイコン" />
             </div>
+
             <div>
               <p class="profile-role">AI × 生活 × 成果</p>
               <h2 class="profile-name">Ren</h2>
+
               <p class="profile-lead">
-                AI初心者でも「今日から使える」実践を中心に。勉強・仕事・副業をラクに、成果が出る方向へ。
+                ＼誰でもできるAI活用術／<br>
+                <strong>1日1分</strong>で作業効率UP⚡️<br><br>
+
+                🤖 ChatGPT / AIツール実践（時短・効率化）<br>
+                📚 勉強・仕事を<strong>最短ルート</strong>で成果へ<br>
+                🙋‍♂️ 理系大学生｜AI×副業<br><br>
+
+                「毎日残業したくない…」<br>
+                「月5万＋の収入がほしい」<br><br>
+
+                → <strong>AIを“使える武器”に変えたい人はここで解決◎</strong>
               </p>
+
+              <div class="profile-links">
+                <a href="https://www.instagram.com/" target="_blank" rel="noopener">
+                  <i class="fa-brands fa-instagram"></i> Instagram
+                </a>
+                <a href="https://coconala.com/" target="_blank" rel="noopener">
+                  <i class="fa-solid fa-store"></i> ココナラ
+                </a>
+                <a href="https://www.threads.net/" target="_blank" rel="noopener">
+                  <i class="fa-brands fa-threads"></i> Threads
+                </a>
+              </div>
             </div>
           </div>
 
@@ -152,28 +231,28 @@
             <div class="profile-section">
               <h3><i class="fa-solid fa-bullseye"></i> このサイトで届けたいこと</h3>
               <ul>
-                <li>AIツールの具体的な使い方（時短・効率化）</li>
-                <li>AIニュースの要点まとめ（忙しくても追える）</li>
-                <li>AI×投資・ビジネスの「実務目線」</li>
+                <li><strong>AIをどう使えば、今日の作業がラクになるか</strong></li>
+                <li>ニュースを読むだけで終わらせず、<strong>行動に落とす視点</strong></li>
+                <li>勉強・仕事・副業に<strong>直結するAI活用法</strong></li>
               </ul>
             </div>
 
             <div class="profile-section">
               <h3><i class="fa-solid fa-route"></i> 発信スタイル</h3>
               <ul>
-                <li>1記事で「要点→背景→実務への落とし込み」</li>
-                <li>専門用語は噛み砕く（でも薄くしない）</li>
-                <li>忙しい人が“迷わず行動できる”形に</li>
+                <li><strong>結論ファースト</strong>で迷わせない</li>
+                <li>1記事＝<strong>5分で本質が掴める</strong>構成</li>
+                <li>「で、何すればいい？」が<strong>必ず分かる締め</strong></li>
               </ul>
             </div>
 
             <div class="profile-section">
-              <h3><i class="fa-solid fa-link"></i> リンク</h3>
-              <div class="footer-links" style="justify-content:flex-start; gap:14px;">
-                <a href="https://www.instagram.com/" target="_blank" rel="noopener">Instagram</a>
-                <a href="https://coconala.com/" target="_blank" rel="noopener">ココナラ</a>
-                <a href="https://www.threads.net/" target="_blank" rel="noopener">Threads</a>
-              </div>
+              <h3><i class="fa-solid fa-sparkles"></i> こんな人におすすめ</h3>
+              <ul>
+                <li>AIを触りたいけど、何から始めればいいか分からない</li>
+                <li>忙しくてニュースを追えない（要点だけ知りたい）</li>
+                <li>勉強・仕事・副業で“成果が出る使い方”を知りたい</li>
+              </ul>
             </div>
           </div>
         </section>
@@ -187,17 +266,15 @@
           <a href="https://coconala.com/" target="_blank" rel="noopener">ココナラ</a>
           <a href="https://www.threads.net/" target="_blank" rel="noopener">Threads</a>
         </div>
-        <p class="footer-copy">&copy; <span data-current-year></span> AI Insight Lab</p>
+        <p class="footer-copy">&copy; <span data-current-year></span> Ren AI Lab</p>
       </div>
     </footer>
 
     <script>
-      // 年
       document.querySelectorAll("[data-current-year]").forEach((el) => {
         el.textContent = String(new Date().getFullYear());
       });
 
-      // モバイルメニュー
       (function setupMenu() {
         const btn = document.querySelector(".menu-toggle");
         const mobile = document.querySelector(".mobile-nav");
@@ -206,7 +283,7 @@
         btn.addEventListener("click", () => {
           const opened = btn.getAttribute("aria-expanded") === "true";
           btn.setAttribute("aria-expanded", String(!opened));
-          mobile.style.display = opened ? "none" : "block";
+          mobile.classList.toggle("open", !opened);
         });
       })();
     </script>
