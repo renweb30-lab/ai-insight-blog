@@ -15,7 +15,7 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css"
     />
-    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/style.css" />
   </head>
 
   <body>
@@ -87,5 +87,160 @@
         <p class="footer-copy">&copy; <span data-current-year></span> AI Insight Lab</p>
       </div>
     </footer>
+
+    <script>
+      // 年
+      document.querySelectorAll("[data-current-year]").forEach((el) => {
+        el.textContent = String(new Date().getFullYear());
+      });
+
+      // モバイルメニュー
+      (function setupMenu() {
+        const btn = document.querySelector(".menu-toggle");
+        const mobile = document.querySelector(".mobile-nav");
+        if (!btn || !mobile) return;
+
+        btn.addEventListener("click", () => {
+          const opened = btn.getAttribute("aria-expanded") === "true";
+          btn.setAttribute("aria-expanded", String(!opened));
+          mobile.style.display = opened ? "none" : "block";
+        });
+      })();
+
+      const CATEGORY_LABEL = {
+        "ai-stocks": "AI株情報",
+        "ai-intro": "AI使い方入門",
+        "ai-tools": "AIツール紹介",
+        "ai-news": "AI関連ニュース",
+      };
+
+      function escapeHtml(s) {
+        return String(s ?? "")
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#39;");
+      }
+
+      function fmtDate(iso) {
+        try {
+          return new Date(iso).toLocaleDateString("ja-JP");
+        } catch {
+          return iso || "";
+        }
+      }
+
+      function monthKey(iso) {
+        const d = new Date(iso);
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, "0");
+        return `${y}-${m}`;
+      }
+
+      function buildTimeline(posts, year) {
+        // year が指定されていたらその年だけ
+        const filtered = year
+          ? posts.filter((p) => String(new Date(p.publishedAt).getFullYear()) === String(year))
+          : posts;
+
+        // 月ごとにグルーピング
+        const groups = new Map();
+        for (const p of filtered) {
+          const key = monthKey(p.publishedAt);
+          if (!groups.has(key)) groups.set(key, []);
+          groups.get(key).push(p);
+        }
+
+        // 月降順
+        const keys = Array.from(groups.keys()).sort((a, b) => (a < b ? 1 : -1));
+
+        return keys
+          .map((key) => {
+            const items = groups.get(key) || [];
+            const title = key.replace("-", "年") + "月";
+            const list = items
+              .map((p) => {
+                const cat = p.categoryId;
+                const catLabel = CATEGORY_LABEL[cat] || cat || "";
+                const href = `post.html?id=${encodeURIComponent(p.id)}`;
+                return `
+                  <div class="archive-item">
+                    <div class="meta">
+                      ${catLabel ? `<span class="badge"><i class="fa-solid fa-hashtag"></i> ${escapeHtml(catLabel)}</span>` : ""}
+                      <span><i class="fa-regular fa-calendar"></i> ${escapeHtml(fmtDate(p.publishedAt))}</span>
+                    </div>
+                    <a class="title-link" href="${href}">${escapeHtml(p.title || "")}</a>
+                    ${p.summary ? `<p class="muted">${escapeHtml(p.summary)}</p>` : ""}
+                  </div>
+                `;
+              })
+              .join("");
+
+            return `
+              <section class="archive-block" style="margin-bottom: 18px;">
+                <h3 style="margin:0 0 10px;">${escapeHtml(title)}</h3>
+                ${list}
+              </section>
+            `;
+          })
+          .join("");
+      }
+
+      async function fetchPosts() {
+        const r = await fetch("/api/posts", { cache: "no-store" });
+        if (!r.ok) throw new Error("Failed to fetch /api/posts");
+        const data = await r.json();
+        return data.posts || [];
+      }
+
+      (async function boot() {
+        const yearsEl = document.querySelector("[data-archive-years]");
+        const timelineEl = document.querySelector("[data-archive-timeline]");
+        const summaryEl = document.querySelector("[data-archive-summary]");
+        const statusEl = document.querySelector("[data-archive-status]");
+
+        try {
+          const posts = await fetchPosts();
+          if (!posts.length) {
+            timelineEl.innerHTML = `<p class="status-text">記事がありません</p>`;
+            if (summaryEl) summaryEl.textContent = "0件";
+            return;
+          }
+
+          // 年の一覧
+          const years = Array.from(
+            new Set(posts.map((p) => new Date(p.publishedAt).getFullYear()))
+          ).sort((a, b) => b - a);
+
+          const params = new URLSearchParams(location.search);
+          const selectedYear = params.get("year") || "";
+
+          if (yearsEl) {
+            yearsEl.innerHTML =
+              `<a class="badge" href="archive.html">すべて</a>` +
+              years
+                .map((y) => {
+                  const active = String(y) === String(selectedYear);
+                  return `<a class="badge" href="archive.html?year=${encodeURIComponent(y)}" ${active ? 'aria-current="page"' : ""}>${y}年</a>`;
+                })
+                .join("");
+          }
+
+          // 右上の要約
+          if (summaryEl) {
+            summaryEl.textContent = `${posts.length}件 / ${years.length}年`;
+          }
+
+          // タイムライン描画
+          timelineEl.innerHTML = buildTimeline(posts, selectedYear);
+
+          if (statusEl) statusEl.textContent = "";
+        } catch (e) {
+          if (timelineEl) timelineEl.innerHTML = `<p class="status-text">読み込みに失敗しました</p>`;
+          if (statusEl) statusEl.textContent = String(e);
+        }
+      })();
+    </script>
   </body>
 </html>
