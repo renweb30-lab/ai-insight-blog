@@ -17,45 +17,6 @@
   />
   <link rel="stylesheet" href="/style.css">
 
-  <!-- 記事本文だけ、追加の見た目を整える（Genspark風） -->
-  <style>
-    .post-wrap { display: grid; gap: 16px; }
-    .post-topbar { display:flex; align-items:center; gap:12px; color: var(--muted, #64748b); }
-    .post-topbar a { text-decoration:none; }
-    .post-hero {
-      padding: 18px 18px;
-      border-radius: 16px;
-      border: 1px solid rgba(148,163,184,.25);
-      background: linear-gradient(180deg, rgba(15,23,42,.75), rgba(15,23,42,.55));
-    }
-    .post-title { margin: 0; font-size: 24px; letter-spacing: .2px; }
-    .post-meta { margin-top: 10px; display:flex; gap:12px; flex-wrap:wrap; color:#94a3b8; font-size: 13px; }
-    .post-eyecatch { width:100%; border-radius: 14px; margin-top: 14px; border:1px solid rgba(148,163,184,.25); overflow:hidden; }
-    .post-eyecatch img { width:100%; display:block; }
-    .post-prose {
-      padding: 18px;
-      border-radius: 16px;
-      border: 1px solid rgba(148,163,184,.25);
-      background: rgba(2,6,23,.35);
-      line-height: 1.9;
-    }
-    .post-prose h2 { margin: 18px 0 10px; font-size: 20px; }
-    .post-prose h3 { margin: 16px 0 8px; font-size: 16px; color:#e2e8f0; }
-    .post-prose p { margin: 10px 0; color:#e2e8f0; }
-    .post-prose a { color: #38bdf8; text-decoration: none; }
-    .post-prose a:hover { text-decoration: underline; }
-    .post-prose ul { margin: 10px 0 10px 22px; }
-    .post-prose li { margin: 6px 0; }
-    .post-prose hr { border: 0; height: 1px; background: rgba(148,163,184,.25); margin: 18px 0; }
-    .post-prose blockquote {
-      margin: 14px 0;
-      padding: 12px 14px;
-      border-left: 3px solid rgba(56,189,248,.8);
-      background: rgba(56,189,248,.12);
-      border-radius: 12px;
-      color:#e2e8f0;
-    }
-  </style>
 </head>
 
 <body>
@@ -97,6 +58,38 @@
             <div class="loader" role="status" aria-label="読み込み中"></div>
           </div>
         </article>
+
+        <section class="post-feedback" aria-labelledby="feedback-title">
+          <div class="feedback-header">
+            <p class="eyebrow">Insight Feedback</p>
+            <h2 id="feedback-title">この記事は役に立ちましたか？</h2>
+            <p class="feedback-subtitle">いただいた声を次の記事の改善に活かします。</p>
+          </div>
+
+          <div>
+            <div class="feedback-actions" role="group" aria-label="記事の評価">
+              <button class="feedback-button" type="button" data-feedback="helpful">
+                <i class="fa-regular fa-face-smile"></i> 役に立った
+              </button>
+              <button class="feedback-button" type="button" data-feedback="neutral">
+                <i class="fa-regular fa-face-meh"></i> ふつう
+              </button>
+              <button class="feedback-button" type="button" data-feedback="improve">
+                <i class="fa-regular fa-face-frown"></i> 改善が必要
+              </button>
+            </div>
+
+            <div class="feedback-note">
+              <label for="feedback-comment">コメント（任意）</label>
+              <textarea id="feedback-comment" name="feedback-comment" placeholder="気づいた点や追加してほしいテーマをお聞かせください。"></textarea>
+            </div>
+          </div>
+
+          <div class="feedback-footer">
+            <button class="button primary" id="feedback-submit" type="button">送信する</button>
+            <p class="status-text" id="feedback-status" role="status" aria-live="polite"></p>
+          </div>
+        </section>
       </div>
     </div>
   </main>
@@ -179,6 +172,42 @@
       } catch (e) {
         el.innerHTML = `<p class="status-text">読み込みに失敗しました</p>`;
         if (status) status.textContent = String(e);
+      }
+    })();
+
+    (() => {
+      const buttons = document.querySelectorAll(".feedback-button");
+      const submit = document.getElementById("feedback-submit");
+      const comment = document.getElementById("feedback-comment");
+      const status = document.getElementById("feedback-status");
+      let selected = null;
+
+      const setStatus = (message, isError = false) => {
+        if (!status) return;
+        status.textContent = message;
+        status.style.color = isError ? "#ef4444" : "";
+      };
+
+      buttons.forEach((button) => {
+        button.addEventListener("click", () => {
+          buttons.forEach((b) => b.classList.remove("is-selected"));
+          button.classList.add("is-selected");
+          selected = button.dataset.feedback || null;
+          setStatus("評価を受け付けました。送信ボタンで確定できます。");
+        });
+      });
+
+      if (submit) {
+        submit.addEventListener("click", () => {
+          if (!selected) {
+            setStatus("評価を選択してください。", true);
+            return;
+          }
+          submit.disabled = true;
+          submit.textContent = "送信済み";
+          setStatus("フィードバックありがとうございます。");
+          if (comment) comment.value = "";
+        });
       }
     })();
   </script>
