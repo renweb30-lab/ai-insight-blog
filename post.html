@@ -133,6 +133,7 @@
       </div>
     </div>
   </footer>
+  <script src="/category-map.js"></script>
   <script>
     async function loadPost(id) {
       const r = await fetch("/api/posts", { cache: "no-store" });
@@ -177,10 +178,13 @@
           return;
         }
 
+        const categoryId = window.normalizeCategoryId(p.categoryId);
+        const categoryLabel = window.getCategoryLabel(categoryId);
+
         window.__POST_META__ = {
           id: p.id,
           title: p.title || "",
-          categoryId: p.categoryId || "",
+          categoryId: categoryId,
           publishedAt: p.publishedAt || ""
         };
 
@@ -190,7 +194,7 @@
           <h1 class="post-title">${escapeHtml(p.title)}</h1>
           <div class="post-meta">
             <span><i class="fa-regular fa-calendar"></i> ${escapeHtml(fmtDate(p.publishedAt))}</span>
-            ${p.categoryId ? `<span><i class="fa-solid fa-hashtag"></i> ${escapeHtml(p.categoryId)}</span>` : ""}
+            ${categoryLabel ? `<span class="category-badge"><i class="fa-solid fa-hashtag"></i> ${escapeHtml(categoryLabel)}</span>` : ""}
           </div>
 
           ${p.eyecatchUrl ? `

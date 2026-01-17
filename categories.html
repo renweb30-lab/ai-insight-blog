@@ -122,6 +122,7 @@
       </div>
     </footer>
 
+    <script src="/category-map.js"></script>
     <script>
       // 年
       document.querySelectorAll("[data-current-year]").forEach((el) => {
@@ -141,13 +142,6 @@
         });
       })();
 
-      const CATEGORY_LABEL = {
-        "ai-stocks": "AI株情報",
-        "ai-intro": "AI入門",
-        "ai-tools": "AIツール",
-        "ai-news": "AI関連ニュース",
-      };
-
       function escapeHtml(s) {
         return String(s ?? "")
           .replaceAll("&", "&amp;")
@@ -166,14 +160,14 @@
       }
 
       function cardHtml(p) {
-        const cat = p.categoryId;
-        const catLabel = CATEGORY_LABEL[cat] || cat || "";
+        const cat = window.normalizeCategoryId(p.categoryId);
+        const catLabel = window.getCategoryLabel(cat);
         const href = `post.html?id=${encodeURIComponent(p.id)}`;
 
         return `
           <article class="card">
             <div class="meta">
-              ${catLabel ? `<span class="badge"><i class="fa-solid fa-hashtag"></i> ${escapeHtml(catLabel)}</span>` : ""}
+              ${catLabel ? `<span class="category-badge"><i class="fa-solid fa-hashtag"></i> ${escapeHtml(catLabel)}</span>` : ""}
               <span><i class="fa-regular fa-calendar"></i> ${escapeHtml(fmtDate(p.publishedAt))}</span>
             </div>
 
@@ -202,7 +196,7 @@
 
       function uniqueCategories(posts) {
         const ids = posts
-          .map((p) => (Array.isArray(p.categoryId) ? p.categoryId[0] : p.categoryId))
+          .map((p) => window.normalizeCategoryId(p.categoryId))
           .filter(Boolean);
         return Array.from(new Set(ids));
       }
@@ -216,7 +210,7 @@
 
         const rest = cats
           .map((id) => {
-            const label = CATEGORY_LABEL[id] || id;
+            const label = window.getCategoryLabel(id);
             const active = id === selected ? 'aria-current="page"' : "";
             return `<a class="badge" href="categories.html?category=${encodeURIComponent(id)}" ${active}>${escapeHtml(label)}</a>`;
           })
@@ -238,7 +232,7 @@
           return;
         }
 
-        const label = CATEGORY_LABEL[selected] || selected;
+        const label = window.getCategoryLabel(selected);
         if (badgeEl) badgeEl.textContent = label;
         if (titleEl) titleEl.textContent = `${label} の記事`;
       }
@@ -257,7 +251,7 @@
 
           const filtered = selected
             ? posts.filter((p) => {
-                const id = Array.isArray(p.categoryId) ? p.categoryId[0] : p.categoryId;
+                const id = window.normalizeCategoryId(p.categoryId);
                 return id === selected;
               })
             : posts;
