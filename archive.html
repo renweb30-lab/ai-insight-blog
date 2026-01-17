@@ -117,6 +117,7 @@
       </div>
     </footer>
 
+    <script src="/category-map.js"></script>
     <script>
       // 年
       document.querySelectorAll("[data-current-year]").forEach((el) => {
@@ -135,13 +136,6 @@
           mobile.style.display = opened ? "none" : "block";
         });
       })();
-
-      const CATEGORY_LABEL = {
-        "ai-stocks": "AI株情報",
-        "ai-intro": "AI入門",
-        "ai-tools": "AIツール",
-        "ai-news": "AI関連ニュース",
-      };
 
       function escapeHtml(s) {
         return String(s ?? "")
@@ -190,13 +184,13 @@
             const title = key.replace("-", "年") + "月";
             const list = items
               .map((p) => {
-                const cat = p.categoryId;
-                const catLabel = CATEGORY_LABEL[cat] || cat || "";
+                const cat = window.normalizeCategoryId(p.categoryId);
+                const catLabel = window.getCategoryLabel(cat);
                 const href = `post.html?id=${encodeURIComponent(p.id)}`;
                 return `
                   <div class="archive-item">
                     <div class="meta">
-                      ${catLabel ? `<span class="badge"><i class="fa-solid fa-hashtag"></i> ${escapeHtml(catLabel)}</span>` : ""}
+                      ${catLabel ? `<span class="category-badge"><i class="fa-solid fa-hashtag"></i> ${escapeHtml(catLabel)}</span>` : ""}
                       <span><i class="fa-regular fa-calendar"></i> ${escapeHtml(fmtDate(p.publishedAt))}</span>
                     </div>
                     <a class="title-link" href="${href}">${escapeHtml(p.title || "")}</a>
