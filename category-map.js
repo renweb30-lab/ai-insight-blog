@@ -7,7 +7,8 @@
   };
 
   const normalizeCategoryId = (value) => {
-    if (Array.isArray(value)) return value[0] || "";
+    if (Array.isArray(value)) return normalizeCategoryId(value[0]);
+    if (value && typeof value === "object") return value.id || value.slug || "";
     return value || "";
   };
 
