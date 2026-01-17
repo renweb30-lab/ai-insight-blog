@@ -117,6 +117,7 @@
       </div>
     </footer>
 
+    <script src="/category-map.js"></script>
     <script>
       // 年
       document.querySelectorAll("[data-current-year]").forEach((el) => {
@@ -135,13 +136,6 @@
           mobile.style.display = opened ? "none" : "block";
         });
       })();
-
-      const CATEGORY_LABEL = {
-        "ai-stocks": "AI株情報",
-        "ai-intro": "AI使い方入門",
-        "ai-tools": "AIツール紹介",
-        "ai-news": "AI関連ニュース",
-      };
 
       function escapeHtml(s) {
         return String(s ?? "")
@@ -190,8 +184,7 @@
             const title = key.replace("-", "年") + "月";
             const list = items
               .map((p) => {
-                const cat = p.categoryId;
-                const catLabel = CATEGORY_LABEL[cat] || cat || "";
+                const catLabel = getCategoryLabel(p.categoryId);
                 const href = `post.html?id=${encodeURIComponent(p.id)}`;
                 return `
                   <div class="archive-item">

@@ -178,6 +178,7 @@
     </footer>
 
     <!-- ✅ ここからが「記事復活」に必要 -->
+    <script src="/category-map.js"></script>
     <script>
       // 年
       document.querySelectorAll("[data-current-year]").forEach((el) => {
@@ -198,25 +199,18 @@
       })();
 
       // microCMS proxy (/api/posts) から取得して描画
-      const CATEGORY_LABEL = {
-        "ai-stocks": "AI株情報",
-        "ai-intro": "AI使い方入門",
-        "ai-tools": "AIツール紹介",
-        "ai-news": "AI関連ニュース",
-      };
-
       const INSIGHT_CONFIG = {
         news: {
           categoryId: "ai-news",
-          label: "AI関連ニュース",
+          label: getCategoryLabel("ai-news"),
         },
         tools: {
           categoryId: "ai-tools",
-          label: "AIツール紹介",
+          label: getCategoryLabel("ai-tools"),
         },
         stocks: {
           categoryId: "ai-stocks",
-          label: "AI株情報",
+          label: getCategoryLabel("ai-stocks"),
         },
       };
 
@@ -237,11 +231,6 @@
         } catch {
           return iso || "";
         }
-      }
-
-      function normalizeCategoryId(value) {
-        if (Array.isArray(value)) return value[0] || "";
-        return value || "";
       }
 
       function extractTags(post) {
@@ -339,8 +328,7 @@
       })();
 
       function cardHtml(p) {
-        const cat = p.categoryId;
-        const catLabel = CATEGORY_LABEL[cat] || cat || "";
+        const catLabel = getCategoryLabel(p.categoryId);
         const href = `post.html?id=${encodeURIComponent(p.id)}`;
 
         return `
@@ -387,10 +375,12 @@
 
         function renderCategories() {
           if (!catEl) return;
-          const uniq = Array.from(new Set(allPosts.map((p) => (Array.isArray(p.categoryId) ? p.categoryId[0] : p.categoryId)).filter(Boolean)));
+          const uniq = Array.from(
+            new Set(allPosts.map((p) => normalizeCategoryId(p.categoryId)).filter(Boolean))
+          );
           catEl.innerHTML = uniq
             .map((id) => {
-              const label = CATEGORY_LABEL[id] || id;
+              const label = getCategoryLabel(id);
               return `<a class="badge" href="categories.html?category=${encodeURIComponent(id)}">${escapeHtml(label)}</a>`;
             })
             .join("");

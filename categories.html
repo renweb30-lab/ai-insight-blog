@@ -122,6 +122,7 @@
       </div>
     </footer>
 
+    <script src="/category-map.js"></script>
     <script>
       // 年
       document.querySelectorAll("[data-current-year]").forEach((el) => {
@@ -141,13 +142,6 @@
         });
       })();
 
-      const CATEGORY_LABEL = {
-        "ai-stocks": "AI株情報",
-        "ai-intro": "AI使い方入門",
-        "ai-tools": "AIツール紹介",
-        "ai-news": "AI関連ニュース",
-      };
-
       function escapeHtml(s) {
         return String(s ?? "")
           .replaceAll("&", "&amp;")
@@ -166,8 +160,7 @@
       }
 
       function cardHtml(p) {
-        const cat = p.categoryId;
-        const catLabel = CATEGORY_LABEL[cat] || cat || "";
+        const catLabel = getCategoryLabel(p.categoryId);
         const href = `post.html?id=${encodeURIComponent(p.id)}`;
 
         return `
@@ -202,7 +195,7 @@
 
       function uniqueCategories(posts) {
         const ids = posts
-          .map((p) => (Array.isArray(p.categoryId) ? p.categoryId[0] : p.categoryId))
+          .map((p) => normalizeCategoryId(p.categoryId))
           .filter(Boolean);
         return Array.from(new Set(ids));
       }
@@ -216,7 +209,7 @@
 
         const rest = cats
           .map((id) => {
-            const label = CATEGORY_LABEL[id] || id;
+            const label = getCategoryLabel(id);
             const active = id === selected ? 'aria-current="page"' : "";
             return `<a class="badge" href="categories.html?category=${encodeURIComponent(id)}" ${active}>${escapeHtml(label)}</a>`;
           })
@@ -238,7 +231,7 @@
           return;
         }
 
-        const label = CATEGORY_LABEL[selected] || selected;
+        const label = getCategoryLabel(selected);
         if (badgeEl) badgeEl.textContent = label;
         if (titleEl) titleEl.textContent = `${label} の記事`;
       }
@@ -257,7 +250,7 @@
 
           const filtered = selected
             ? posts.filter((p) => {
-                const id = Array.isArray(p.categoryId) ? p.categoryId[0] : p.categoryId;
+                const id = normalizeCategoryId(p.categoryId);
                 return id === selected;
               })
             : posts;
