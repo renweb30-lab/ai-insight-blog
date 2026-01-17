@@ -227,15 +227,43 @@
       });
 
       if (submit) {
-        submit.addEventListener("click", () => {
+        submit.addEventListener("click", async () => {
           if (!selected) {
             setStatus("評価を選択してください。", true);
             return;
           }
+
+          const params = new URLSearchParams(location.search);
+          const postId = params.get("id");
+
           submit.disabled = true;
-          submit.textContent = "送信済み";
-          setStatus("フィードバックありがとうございます。");
-          if (comment) comment.value = "";
+          submit.textContent = "送信中...";
+
+          try {
+            const res = await fetch("/api/feedback", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                postId,
+                feedback: selected,
+                comment: comment?.value || "",
+                url: location.href,
+                referrer: document.referrer || "",
+                ua: navigator.userAgent,
+                ts: new Date().toISOString(),
+              }),
+            });
+
+            if (!res.ok) throw new Error("送信に失敗しました");
+
+            submit.textContent = "送信済み";
+            setStatus("フィードバックありがとうございます。");
+            if (comment) comment.value = "";
+          } catch (e) {
+            submit.disabled = false;
+            submit.textContent = "送信する";
+            setStatus(String(e), true);
+          }
         });
       }
     })();
