@@ -294,7 +294,8 @@
         if (textEl) textEl.textContent = post.summary || "要約は準備中です。";
         if (tagEl) {
           const fallbackTags = tags.length ? tags : [config.label];
-          tagEl.innerHTML = fallbackTags
+          const displayTags = fallbackTags.map((tag) => window.getCategoryLabel(tag));
+          tagEl.innerHTML = displayTags
             .map((tag) => `<span class="insight-tag">${escapeHtml(tag)}</span>`)
             .join("");
         }
