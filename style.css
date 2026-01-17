@@ -198,6 +198,16 @@ main{padding:18px}
   display:grid;
   gap:16px;
 }
+.insight-main{
+  display:flex;
+  flex-direction:column;
+}
+.insight-aside{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  justify-content:center;
+}
 .insight-label{
   margin:0;
   font-size:.75rem;
@@ -217,6 +227,35 @@ main{padding:18px}
   color:#0ea5e9;
   background: rgba(56,189,248,.12);
   border: 1px solid rgba(56,189,248,.22);
+}
+.insight-tag.is-muted{
+  color: var(--muted);
+  background: rgba(148,163,184,.12);
+  border-color: rgba(148,163,184,.25);
+}
+.insight-meta{
+  display:grid;
+  gap:10px;
+}
+.insight-meta div{
+  padding:12px 14px;
+  border-radius: 14px;
+  background: var(--surface-soft);
+  border: 1px solid rgba(15,23,42,.08);
+}
+.insight-meta span{
+  display:block;
+  font-size:.78rem;
+  color:var(--muted);
+}
+.insight-meta strong{
+  display:block;
+  font-size:.98rem;
+  color:#0f172a;
+}
+.button.is-disabled{
+  opacity:.6;
+  pointer-events:none;
 }
 .insight-metrics{
   display:grid;
@@ -441,18 +480,62 @@ footer{
 .footer-inner{
   max-width:var(--max);margin:0 auto;
   padding: 26px 18px;
-  display:flex;flex-direction:column;gap:14px;
+  display:flex;
+  flex-direction:column;
+  gap:22px;
 }
-.footer-links{display:flex;gap:12px;flex-wrap:wrap}
-.footer-links a{
+.footer-top{
+  display:grid;
+  gap:22px;
+}
+.footer-brand{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.footer-logo{
+  font-weight:900;
+  letter-spacing:.04em;
+  font-size:1.1rem;
+  color:#0f172a;
+}
+.footer-description{
+  margin:0;
+  color:var(--muted);
+  max-width:46ch;
+}
+.footer-grid{
+  display:grid;
+  gap:18px;
+}
+.footer-column{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.footer-title{
+  margin:0;
+  font-size:.85rem;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--muted);
   font-weight:800;
-  color: rgba(100,116,139,.95);
-  padding:8px 12px;border-radius:999px;
-  border:1px solid rgba(15,23,42,.08);
-  background: rgba(248,250,252,.85);
 }
-.footer-links a:hover{transform:translateY(-1px)}
+.footer-column a{
+  font-weight:700;
+  color: rgba(100,116,139,.95);
+  padding:6px 0;
+}
+.footer-column a:hover{color:var(--accent2)}
+.footer-bottom{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  border-top: 1px solid rgba(15,23,42,.08);
+  padding-top: 18px;
+}
 .footer-copy{margin:0;color:var(--muted);font-weight:700}
+.footer-note{margin:0;color:rgba(100,116,139,.8);font-size:.85rem}
 
 /* ===== Loader / Status ===== */
 .status-text{text-align:center;color:var(--muted);margin:18px auto;font-weight:700}
@@ -596,6 +679,9 @@ footer{
   .feedback-footer{flex-direction:row;align-items:center;justify-content:space-between}
   .insight-card{grid-template-columns: 1.2fr .8fr;align-items:center}
   .insight-metrics{grid-template-columns: repeat(3, minmax(0, 1fr))}
+  .footer-top{grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);align-items:start}
+  .footer-grid{grid-template-columns: repeat(3, minmax(0, 1fr))}
+  .footer-bottom{flex-direction:row;align-items:center;justify-content:space-between}
 }
 @media (min-width: 1024px){
   .card-grid{grid-template-columns: repeat(3, minmax(0, 1fr))}
