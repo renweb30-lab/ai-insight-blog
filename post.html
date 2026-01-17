@@ -177,6 +177,13 @@
           return;
         }
 
+        window.__POST_META__ = {
+          id: p.id,
+          title: p.title || "",
+          categoryId: p.categoryId || "",
+          publishedAt: p.publishedAt || ""
+        };
+
         document.title = `${p.title || "記事"} | AI Insight Lab`;
 
         el.innerHTML = `
@@ -227,15 +234,49 @@
       });
 
       if (submit) {
-        submit.addEventListener("click", () => {
+        submit.addEventListener("click", async () => {
           if (!selected) {
             setStatus("評価を選択してください。", true);
             return;
           }
+
+          const meta = window.__POST_META__ || {};
+          const postId = meta.id || new URLSearchParams(location.search).get("id");
+          if (!postId) {
+            setStatus("記事情報が取得できませんでした。", true);
+            return;
+          }
+
           submit.disabled = true;
           submit.textContent = "送信済み";
-          setStatus("フィードバックありがとうございます。");
-          if (comment) comment.value = "";
+          try {
+            const r = await fetch("/api/feedback", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                postId,
+                postTitle: meta.title,
+                categoryId: meta.categoryId,
+                publishedAt: meta.publishedAt,
+                feedback: selected,
+                comment: comment?.value || "",
+                url: location.href,
+                referrer: document.referrer || "",
+                ua: navigator.userAgent,
+                ts: new Date().toISOString(),
+              }),
+            });
+
+            if (!r.ok) {
+              throw new Error("フィードバック送信に失敗しました。");
+            }
+            setStatus("フィードバックありがとうございます。");
+            if (comment) comment.value = "";
+          } catch (error) {
+            submit.disabled = false;
+            submit.textContent = "送信する";
+            setStatus(error instanceof Error ? error.message : "送信に失敗しました。", true);
+          }
         });
       }
     })();
