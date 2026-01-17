@@ -5,7 +5,18 @@ export default async function handler(req, res) {
     }
 
     // 受け取るデータ
-    const { postId, feedback, comment, url, referrer, ua, ts } = req.body || {};
+    const {
+      postId,
+      postTitle,
+      categoryId,
+      publishedAt,
+      feedback,
+      comment,
+      url,
+      referrer,
+      ua,
+      ts
+    } = req.body || {};
 
     if (!postId || !feedback) {
       return res.status(400).json({ error: "postId and feedback are required" });
@@ -20,6 +31,9 @@ export default async function handler(req, res) {
 
     const payload = {
       postId,
+      postTitle: postTitle || "",
+      categoryId: categoryId || "",
+      publishedAt: publishedAt || "",
       feedback,            // helpful / neutral / improve
       comment: comment || "",
       url: url || "",
