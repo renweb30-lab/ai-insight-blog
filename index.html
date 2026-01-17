@@ -78,15 +78,18 @@
             </button>
           </div>
           <div class="insight-card" data-insight-card>
-            <div>
-              <p class="insight-label">Focus</p>
-              <h3 data-insight-title>速報：業界の新しい動きを把握</h3>
-              <p class="insight-text" data-insight-text>
-                今日のAIニュースを3分で把握できるよう、重要度の高い話題だけを厳選してお届けします。
-              </p>
+            <div class="insight-main">
+              <p class="insight-label">Latest Signal</p>
+              <h3 data-insight-title>読み込み中...</h3>
+              <p class="insight-text" data-insight-text></p>
               <div class="insight-tags" data-insight-tags></div>
             </div>
-            <div class="insight-metrics" data-insight-metrics></div>
+            <div class="insight-aside">
+              <div class="insight-meta" data-insight-meta></div>
+              <a class="button secondary" data-insight-link href="archive.html">
+                <i class="fa-solid fa-arrow-right"></i> 記事を読む
+              </a>
+            </div>
           </div>
           <div class="insight-footer">
             <a class="button secondary" href="archive.html">
@@ -136,12 +139,41 @@
 
     <footer>
       <div class="footer-inner">
-        <div class="footer-links">
-          <a href="https://www.instagram.com/ren_web3.0_/" target="_blank" rel="noopener">Instagram</a>
-          <a href="https://coconala.com/users/5831852" target="_blank" rel="noopener">ココナラ</a>
-          <a href="https://www.threads.com/@ren_web3.0_/" target="_blank" rel="noopener">Threads</a>
+        <div class="footer-top">
+          <div class="footer-brand">
+            <a class="footer-logo" href="index.html">Ren AI Lab</a>
+            <p class="footer-description">
+              AIニュース、ツール、投資インサイトを一つにまとめたビジネス向けナレッジメディア。
+              使える視点だけを厳選してお届けします。
+            </p>
+          </div>
+          <div class="footer-grid">
+            <div class="footer-column">
+              <p class="footer-title">Explore</p>
+              <a href="index.html">Home</a>
+              <a href="categories.html">Categories</a>
+              <a href="archive.html">Archive</a>
+              <a href="profile.html">Profile</a>
+            </div>
+            <div class="footer-column">
+              <p class="footer-title">Categories</p>
+              <a href="categories.html?category=ai-news">AIニュース</a>
+              <a href="categories.html?category=ai-tools">AIツール</a>
+              <a href="categories.html?category=ai-stocks">AI株・ビジネス</a>
+              <a href="categories.html?category=ai-intro">AI入門</a>
+            </div>
+            <div class="footer-column">
+              <p class="footer-title">Connect</p>
+              <a href="https://www.instagram.com/ren_web3.0_/" target="_blank" rel="noopener">Instagram</a>
+              <a href="https://coconala.com/users/5831852" target="_blank" rel="noopener">ココナラ</a>
+              <a href="https://www.threads.com/@ren_web3.0_/" target="_blank" rel="noopener">Threads</a>
+            </div>
+          </div>
         </div>
-        <p class="footer-copy">&copy; <span data-current-year></span> AI Insight Lab</p>
+        <div class="footer-bottom">
+          <p class="footer-copy">&copy; <span data-current-year></span> Ren AI Lab. All rights reserved.</p>
+          <p class="footer-note">Empowering teams with practical AI insights.</p>
+        </div>
       </div>
     </footer>
 
@@ -173,38 +205,22 @@
         "ai-news": "AI関連ニュース",
       };
 
-      const INSIGHT_SPOTLIGHT = {
+      const INSIGHT_CONFIG = {
         news: {
-          title: "速報：業界の新しい動きを把握",
-          text: "今日のAIニュースを3分で把握できるよう、重要度の高い話題だけを厳選してお届けします。",
-          tags: ["グローバル動向", "規制・政策", "最新リリース"],
-          metrics: [
-            { label: "更新頻度", value: "毎日" },
-            { label: "所要時間", value: "3分" },
-            { label: "注目度", value: "高" },
-          ],
+          categoryId: "ai-news",
+          label: "AI関連ニュース",
         },
         tools: {
-          title: "実務で使えるAIツールだけを厳選",
-          text: "仕事の生産性を一気に上げるツールを、用途別に評価してスコアリングしています。",
-          tags: ["自動化", "ライティング", "分析"],
-          metrics: [
-            { label: "評価軸", value: "使いやすさ" },
-            { label: "導入難易度", value: "低" },
-            { label: "ROI", value: "即効型" },
-          ],
+          categoryId: "ai-tools",
+          label: "AIツール紹介",
         },
         stocks: {
-          title: "AI投資のトレンドを読み解く",
-          text: "成長分野と注目銘柄を俯瞰し、リスクとチャンスをバランス良く整理します。",
-          tags: ["半導体", "クラウド", "エンタープライズ"],
-          metrics: [
-            { label: "視点", value: "中長期" },
-            { label: "注目セクター", value: "インフラ" },
-            { label: "洞察レベル", value: "戦略的" },
-          ],
+          categoryId: "ai-stocks",
+          label: "AI株情報",
         },
       };
+
+      let insightPosts = {};
 
       function escapeHtml(s) {
         return String(s ?? "")
@@ -223,31 +239,86 @@
         }
       }
 
+      function normalizeCategoryId(value) {
+        if (Array.isArray(value)) return value[0] || "";
+        return value || "";
+      }
+
+      function extractTags(post) {
+        const raw = post?.tags ?? post?.tag ?? post?.labels;
+        if (Array.isArray(raw)) return raw.filter(Boolean);
+        if (typeof raw === "string") {
+          return raw
+            .split(",")
+            .map((tag) => tag.trim())
+            .filter(Boolean);
+        }
+        return [];
+      }
+
+      function buildInsightPosts(posts) {
+        const sorted = [...posts].sort(
+          (a, b) => new Date(b.publishedAt) - new Date(a.publishedAt)
+        );
+        const result = {};
+        Object.entries(INSIGHT_CONFIG).forEach(([key, config]) => {
+          result[key] =
+            sorted.find((post) => normalizeCategoryId(post.categoryId) === config.categoryId) || null;
+        });
+        return result;
+      }
+
       function renderInsightCard(key) {
-        const card = INSIGHT_SPOTLIGHT[key];
-        if (!card) return;
+        const config = INSIGHT_CONFIG[key];
+        const post = insightPosts[key] || null;
+        if (!config) return;
+
         const titleEl = document.querySelector("[data-insight-title]");
         const textEl = document.querySelector("[data-insight-text]");
         const tagEl = document.querySelector("[data-insight-tags]");
-        const metricsEl = document.querySelector("[data-insight-metrics]");
-        if (titleEl) titleEl.textContent = card.title;
-        if (textEl) textEl.textContent = card.text;
+        const metaEl = document.querySelector("[data-insight-meta]");
+        const linkEl = document.querySelector("[data-insight-link]");
+
+        if (!post) {
+          if (titleEl) titleEl.textContent = "記事がまだありません";
+          if (textEl) textEl.textContent = "このカテゴリの最新記事が公開され次第、ここに表示されます。";
+          if (tagEl) tagEl.innerHTML = `<span class="insight-tag is-muted">タグがまだありません</span>`;
+          if (metaEl) {
+            metaEl.innerHTML = `
+              <div><span>カテゴリ</span><strong>${escapeHtml(config.label)}</strong></div>
+              <div><span>ステータス</span><strong>準備中</strong></div>
+            `;
+          }
+          if (linkEl) {
+            linkEl.href = `categories.html?category=${encodeURIComponent(config.categoryId)}`;
+            linkEl.classList.add("is-disabled");
+            linkEl.setAttribute("aria-disabled", "true");
+          }
+          return;
+        }
+
+        const tags = extractTags(post);
+        const date = fmtDate(post.publishedAt);
+        const href = `post.html?id=${encodeURIComponent(post.id)}`;
+
+        if (titleEl) titleEl.textContent = post.title || "";
+        if (textEl) textEl.textContent = post.summary || "要約は準備中です。";
         if (tagEl) {
-          tagEl.innerHTML = card.tags
+          const fallbackTags = tags.length ? tags : [config.label];
+          tagEl.innerHTML = fallbackTags
             .map((tag) => `<span class="insight-tag">${escapeHtml(tag)}</span>`)
             .join("");
         }
-        if (metricsEl) {
-          metricsEl.innerHTML = card.metrics
-            .map(
-              (metric) => `
-                <div class="insight-metric">
-                  <p>${escapeHtml(metric.label)}</p>
-                  <strong>${escapeHtml(metric.value)}</strong>
-                </div>
-              `
-            )
-            .join("");
+        if (metaEl) {
+          metaEl.innerHTML = `
+            <div><span>カテゴリ</span><strong>${escapeHtml(config.label)}</strong></div>
+            <div><span>更新日</span><strong>${escapeHtml(date)}</strong></div>
+          `;
+        }
+        if (linkEl) {
+          linkEl.href = href;
+          linkEl.classList.remove("is-disabled");
+          linkEl.removeAttribute("aria-disabled");
         }
       }
 
@@ -265,7 +336,6 @@
             renderInsightCard(tab.dataset.insight);
           });
         });
-        renderInsightCard("news");
       })();
 
       function cardHtml(p) {
@@ -351,6 +421,9 @@
 
         try {
           allPosts = await fetchPosts();
+          insightPosts = buildInsightPosts(allPosts);
+          const activeTab = document.querySelector(".insight-tab.is-active");
+          renderInsightCard(activeTab?.dataset.insight || "news");
           renderRecommended();
           renderCategories();
           renderLatest(true);
@@ -361,6 +434,10 @@
         } catch (e) {
           if (recEl) recEl.innerHTML = `<p class="status-text">読み込みに失敗しました</p>`;
           if (latestEl) latestEl.innerHTML = `<p class="status-text">読み込みに失敗しました</p>`;
+          const titleEl = document.querySelector("[data-insight-title]");
+          const textEl = document.querySelector("[data-insight-text]");
+          if (titleEl) titleEl.textContent = "読み込みに失敗しました";
+          if (textEl) textEl.textContent = "データの取得に失敗しました。時間をおいて再度お試しください。";
           if (statusEl) statusEl.textContent = String(e);
         }
       })();
