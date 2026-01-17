@@ -119,6 +119,11 @@ main{padding:18px}
   display:flex;align-items:flex-end;justify-content:space-between;gap:12px;
   margin: 18px 0 14px;
 }
+.section-subtitle{
+  color:var(--muted);
+  font-size:.9rem;
+  font-weight:600;
+}
 .section-header h2{
   margin:0;font-size:1.35rem;letter-spacing:.02em;
 }
@@ -148,6 +153,84 @@ main{padding:18px}
 .hero h1{margin:0 0 10px;font-size:1.85rem;line-height:1.35}
 .hero p{margin:0 0 18px;color:var(--muted);max-width:68ch}
 .hero-actions{display:flex;gap:12px;flex-wrap:wrap}
+
+/* ===== Insight Signal ===== */
+.insight-panel{
+  margin-top: 22px;
+  padding: 22px;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(15,23,42,.10);
+  background: rgba(255,255,255,.92);
+  box-shadow: var(--shadow-sm);
+  display:grid;
+  gap:16px;
+}
+.insight-tabs{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.insight-tab{
+  border-radius:999px;
+  padding:10px 16px;
+  border:1px solid rgba(15,23,42,.12);
+  background: rgba(248,250,252,.9);
+  font-weight:700;
+  color:#0f172a;
+  cursor:pointer;
+  transition: var(--transition);
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+}
+.insight-tab:hover{transform:translateY(-1px);border-color: rgba(56,189,248,.35)}
+.insight-tab.is-active{
+  background: linear-gradient(135deg, rgba(14,165,233,1), rgba(56,189,248,1));
+  color:#fff;
+  border-color: rgba(14,165,233,.35);
+  box-shadow: 0 16px 36px rgba(14,165,233,.16);
+}
+.insight-card{
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(15,23,42,.08);
+  background: var(--surface-strong);
+  padding: 18px;
+  display:grid;
+  gap:16px;
+}
+.insight-label{
+  margin:0;
+  font-size:.75rem;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color: var(--muted);
+  font-weight:700;
+}
+.insight-card h3{margin:6px 0 10px;font-size:1.2rem}
+.insight-text{margin:0 0 12px;color:#1e293b}
+.insight-tags{display:flex;flex-wrap:wrap;gap:8px}
+.insight-tag{
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:.78rem;
+  font-weight:700;
+  color:#0ea5e9;
+  background: rgba(56,189,248,.12);
+  border: 1px solid rgba(56,189,248,.22);
+}
+.insight-metrics{
+  display:grid;
+  gap:10px;
+}
+.insight-metric{
+  padding:12px 14px;
+  border-radius: 14px;
+  background: var(--surface-soft);
+  border: 1px solid rgba(15,23,42,.08);
+}
+.insight-metric p{margin:0;color:var(--muted);font-size:.8rem}
+.insight-metric strong{display:block;font-size:1rem;color:#0f172a}
+.insight-footer{display:flex;justify-content:flex-end}
 
 /* ===== Buttons ===== */
 .button{
@@ -511,6 +594,8 @@ footer{
   .profile-grid{grid-template-columns: repeat(2, minmax(0, 1fr))}
   .post-feedback{grid-template-columns: 1.1fr .9fr}
   .feedback-footer{flex-direction:row;align-items:center;justify-content:space-between}
+  .insight-card{grid-template-columns: 1.2fr .8fr;align-items:center}
+  .insight-metrics{grid-template-columns: repeat(3, minmax(0, 1fr))}
 }
 @media (min-width: 1024px){
   .card-grid{grid-template-columns: repeat(3, minmax(0, 1fr))}

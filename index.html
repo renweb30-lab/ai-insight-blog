@@ -61,6 +61,40 @@
           </div>
         </section>
 
+        <section class="insight-panel" aria-labelledby="insight-panel-title">
+          <div class="section-header">
+            <h2 id="insight-panel-title">Insight Signal</h2>
+            <span class="section-subtitle">今日の注目トピックをワンタップで切り替え</span>
+          </div>
+          <div class="insight-tabs" role="tablist" aria-label="注目テーマ">
+            <button class="insight-tab is-active" type="button" data-insight="news" role="tab" aria-selected="true">
+              <i class="fa-solid fa-newspaper"></i> ニュース
+            </button>
+            <button class="insight-tab" type="button" data-insight="tools" role="tab" aria-selected="false">
+              <i class="fa-solid fa-wand-magic-sparkles"></i> ツール
+            </button>
+            <button class="insight-tab" type="button" data-insight="stocks" role="tab" aria-selected="false">
+              <i class="fa-solid fa-chart-line"></i> 株・ビジネス
+            </button>
+          </div>
+          <div class="insight-card" data-insight-card>
+            <div>
+              <p class="insight-label">Focus</p>
+              <h3 data-insight-title>速報：業界の新しい動きを把握</h3>
+              <p class="insight-text" data-insight-text>
+                今日のAIニュースを3分で把握できるよう、重要度の高い話題だけを厳選してお届けします。
+              </p>
+              <div class="insight-tags" data-insight-tags></div>
+            </div>
+            <div class="insight-metrics" data-insight-metrics></div>
+          </div>
+          <div class="insight-footer">
+            <a class="button secondary" href="archive.html">
+              <i class="fa-solid fa-arrow-right"></i> 注目トピックを深掘り
+            </a>
+          </div>
+        </section>
+
         <section id="recommended" aria-labelledby="recommended-title">
           <div class="section-header">
             <h2 id="recommended-title">おすすめ記事</h2>
@@ -103,9 +137,9 @@
     <footer>
       <div class="footer-inner">
         <div class="footer-links">
-          <a href="https://www.instagram.com/" target="_blank" rel="noopener">Instagram</a>
-          <a href="https://coconala.com/" target="_blank" rel="noopener">ココナラ</a>
-          <a href="https://www.threads.net/" target="_blank" rel="noopener">Threads</a>
+          <a href="https://www.instagram.com/ren_web3.0_/" target="_blank" rel="noopener">Instagram</a>
+          <a href="https://coconala.com/users/5831852" target="_blank" rel="noopener">ココナラ</a>
+          <a href="https://www.threads.com/@ren_web3.0_/" target="_blank" rel="noopener">Threads</a>
         </div>
         <p class="footer-copy">&copy; <span data-current-year></span> AI Insight Lab</p>
       </div>
@@ -139,6 +173,39 @@
         "ai-news": "AI関連ニュース",
       };
 
+      const INSIGHT_SPOTLIGHT = {
+        news: {
+          title: "速報：業界の新しい動きを把握",
+          text: "今日のAIニュースを3分で把握できるよう、重要度の高い話題だけを厳選してお届けします。",
+          tags: ["グローバル動向", "規制・政策", "最新リリース"],
+          metrics: [
+            { label: "更新頻度", value: "毎日" },
+            { label: "所要時間", value: "3分" },
+            { label: "注目度", value: "高" },
+          ],
+        },
+        tools: {
+          title: "実務で使えるAIツールだけを厳選",
+          text: "仕事の生産性を一気に上げるツールを、用途別に評価してスコアリングしています。",
+          tags: ["自動化", "ライティング", "分析"],
+          metrics: [
+            { label: "評価軸", value: "使いやすさ" },
+            { label: "導入難易度", value: "低" },
+            { label: "ROI", value: "即効型" },
+          ],
+        },
+        stocks: {
+          title: "AI投資のトレンドを読み解く",
+          text: "成長分野と注目銘柄を俯瞰し、リスクとチャンスをバランス良く整理します。",
+          tags: ["半導体", "クラウド", "エンタープライズ"],
+          metrics: [
+            { label: "視点", value: "中長期" },
+            { label: "注目セクター", value: "インフラ" },
+            { label: "洞察レベル", value: "戦略的" },
+          ],
+        },
+      };
+
       function escapeHtml(s) {
         return String(s ?? "")
           .replaceAll("&", "&amp;")
@@ -155,6 +222,51 @@
           return iso || "";
         }
       }
+
+      function renderInsightCard(key) {
+        const card = INSIGHT_SPOTLIGHT[key];
+        if (!card) return;
+        const titleEl = document.querySelector("[data-insight-title]");
+        const textEl = document.querySelector("[data-insight-text]");
+        const tagEl = document.querySelector("[data-insight-tags]");
+        const metricsEl = document.querySelector("[data-insight-metrics]");
+        if (titleEl) titleEl.textContent = card.title;
+        if (textEl) textEl.textContent = card.text;
+        if (tagEl) {
+          tagEl.innerHTML = card.tags
+            .map((tag) => `<span class="insight-tag">${escapeHtml(tag)}</span>`)
+            .join("");
+        }
+        if (metricsEl) {
+          metricsEl.innerHTML = card.metrics
+            .map(
+              (metric) => `
+                <div class="insight-metric">
+                  <p>${escapeHtml(metric.label)}</p>
+                  <strong>${escapeHtml(metric.value)}</strong>
+                </div>
+              `
+            )
+            .join("");
+        }
+      }
+
+      (function setupInsightTabs() {
+        const tabs = document.querySelectorAll(".insight-tab");
+        if (!tabs.length) return;
+        tabs.forEach((tab) => {
+          tab.addEventListener("click", () => {
+            tabs.forEach((btn) => {
+              btn.classList.remove("is-active");
+              btn.setAttribute("aria-selected", "false");
+            });
+            tab.classList.add("is-active");
+            tab.setAttribute("aria-selected", "true");
+            renderInsightCard(tab.dataset.insight);
+          });
+        });
+        renderInsightCard("news");
+      })();
 
       function cardHtml(p) {
         const cat = p.categoryId;
