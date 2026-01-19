@@ -165,20 +165,20 @@
         const href = `post.html?id=${encodeURIComponent(p.id)}`;
 
         return `
-          <article class="card">
+          <a class="card card-link" href="${href}" aria-label="${escapeHtml(p.title || "記事を読む")}">
             <div class="meta">
               ${catLabel ? `<span class="category-badge"><i class="fa-solid fa-hashtag"></i> ${escapeHtml(catLabel)}</span>` : ""}
               <span><i class="fa-regular fa-calendar"></i> ${escapeHtml(fmtDate(p.publishedAt))}</span>
             </div>
 
-            <a class="title-link" href="${href}">
+            <h3 class="card-title">
               ${escapeHtml(p.title || "")}
-            </a>
+            </h3>
 
             ${p.eyecatchUrl ? `<img class="thumb" src="${escapeHtml(p.eyecatchUrl)}" alt="" loading="lazy" />` : ""}
 
             ${p.summary ? `<p class="muted">${escapeHtml(p.summary)}</p>` : ""}
-          </article>
+          </a>
         `;
       }
 
