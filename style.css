@@ -139,6 +139,35 @@ main{padding:18px}
 }
 .section-header a:hover{transform:translateY(-1px);background:rgba(56,189,248,.12)}
 
+/* Keep listing headings visually connected to the content they introduce. */
+.listing-panel{
+  padding:20px;
+  border:1px solid rgba(15,23,42,.10);
+  border-radius:var(--radius-lg);
+  background:rgba(255,255,255,.72);
+  box-shadow:var(--shadow-sm);
+}
+.listing-panel > .section-header{
+  align-items:center;
+  margin:0 0 18px;
+  padding-bottom:14px;
+  border-bottom:1px solid rgba(15,23,42,.08);
+}
+.listing-panel > .section-header h2{
+  padding-left:12px;
+  border-left:4px solid var(--accent2);
+}
+.listing-panel > .section-header .category-badge{
+  margin:0 0 8px;
+}
+.listing-panel > .archive-list{
+  padding:0;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+}
+
 /* ===== Hero ===== */
 .hero{
   border-radius: var(--radius-lg);

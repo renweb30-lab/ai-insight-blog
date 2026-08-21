@@ -4,6 +4,7 @@
     "ai-intro": "AI入門",
     "ai-tools": "AIツール",
     "ai-news": "AI関連ニュース",
+    "ai-auto": "AI自動化",
   };
 
   const normalizeCategoryId = (value) => {

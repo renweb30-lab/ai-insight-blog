@@ -63,7 +63,7 @@
             <div class="badge-grid" data-category-list></div>
           </aside>
 
-          <section aria-live="polite" aria-labelledby="category-title">
+          <section class="listing-panel" aria-live="polite" aria-labelledby="category-title">
             <header class="section-header">
               <div>
                 <p class="category-badge" data-selected-category></p>
@@ -106,6 +106,7 @@
               <a href="categories.html?category=ai-tools">AIツール</a>
               <a href="categories.html?category=ai-stocks">AI株情報</a>
               <a href="categories.html?category=ai-intro">AI入門</a>
+              <a href="categories.html?category=ai-auto">AI自動化</a>
             </div>
             <div class="footer-column">
               <p class="footer-title">Connect</p>
@@ -198,7 +199,7 @@
         const ids = posts
           .map((p) => window.normalizeCategoryId(p.categoryId))
           .filter(Boolean);
-        return Array.from(new Set(ids));
+        return Array.from(new Set([...Object.keys(window.CATEGORY_LABELS), ...ids]));
       }
 
       function renderCategoryBadges(cats, selected) {
@@ -243,7 +244,7 @@
 
         try {
           const posts = await fetchPosts();
-          const cats = uniqueCategories(posts).sort();
+          const cats = uniqueCategories(posts);
           const selected = getCategoryFromUrl();
 
           renderCategoryBadges(cats, selected);
