@@ -19,12 +19,13 @@
   </head>
 
   <body>
+    <a class="skip-link" href="#main-content">本文へスキップ</a>
     <header>
       <div class="header-inner">
         <a class="logo" href="index.html">Ren AI Lab</a>
         <nav aria-label="メインナビゲーション">
           <ul class="nav-links">
-            <li><a href="index.html">Home</a></li>
+            <li><a href="index.html" class="is-active" aria-current="page">Home</a></li>
             <li><a href="categories.html">Categories</a></li>
             <li><a href="archive.html">Archive</a></li>
             <li><a href="profile.html">Profile</a></li>
@@ -36,16 +37,17 @@
       </div>
 
       <div class="mobile-nav" aria-label="モバイルナビゲーション">
-        <a href="index.html">Home</a>
+        <a href="index.html" class="is-active" aria-current="page">Home</a>
         <a href="categories.html">Categories</a>
         <a href="archive.html">Archive</a>
         <a href="profile.html">Profile</a>
       </div>
     </header>
 
-    <main>
+    <main id="main-content">
       <div class="container">
         <section class="hero">
+          <p class="hero-eyebrow"><i class="fa-solid fa-bolt" aria-hidden="true"></i> Practical AI Intelligence</p>
           <h1>AIとテックの“いま”を、ストレスなくキャッチアップ</h1>
           <p>
             投資・ビジネス・実務活用まで、AI初心者〜中級者のためのナレッジハブ。
@@ -101,7 +103,7 @@
           </div>
         </section>
 
-        <section id="recommended" aria-labelledby="recommended-title">
+        <section id="recommended" class="content-section" aria-labelledby="recommended-title">
           <div class="section-header">
             <h2 id="recommended-title">おすすめ記事</h2>
             <a href="archive.html">すべての記事を見る</a>
@@ -113,14 +115,14 @@
           </div>
         </section>
 
-        <section aria-labelledby="category-quick-nav">
+        <section class="content-section category-section" aria-labelledby="category-quick-nav">
           <div class="section-header">
             <h2 id="category-quick-nav">カテゴリから探す</h2>
           </div>
           <div class="badge-grid" data-category-shortcuts></div>
         </section>
 
-        <section id="latest" aria-labelledby="latest-title">
+        <section id="latest" class="content-section" aria-labelledby="latest-title">
           <div class="section-header">
             <h2 id="latest-title">最新記事</h2>
             <a href="archive.html">アーカイブ</a>
@@ -131,7 +133,7 @@
             </div>
           </div>
           <div class="status-text" data-latest-status></div>
-          <div style="text-align: center; margin-top: 16px;">
+          <div class="load-more-wrap">
             <button class="button secondary" data-load-more>
               <i class="fa-solid fa-plus"></i> もっと見る
             </button>
