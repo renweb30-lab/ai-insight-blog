@@ -17,10 +17,28 @@ const PROFILE_FIELDS = [
 ];
 
 function normalizeProfile(data = {}) {
+  // Support both an object endpoint response and the first item returned by a
+  // list endpoint. This also makes the image handling resilient if the API
+  // schema is changed without requiring a frontend update.
+  const source = Array.isArray(data.contents) ? (data.contents[0] || {}) : data;
   const profile = Object.fromEntries(
-    PROFILE_FIELDS.map((field) => [field, typeof data[field] === "string" ? data[field].trim() : ""])
+    PROFILE_FIELDS.map((field) => [field, typeof source[field] === "string" ? source[field].trim() : ""])
   );
-  profile.iconUrl = typeof data.icon?.url === "string" ? data.icon.url : "";
+  const icon = Array.isArray(source.icon) ? source.icon[0] : source.icon;
+  const rawIconUrl = typeof icon === "string" ? icon : icon?.url;
+  if (typeof rawIconUrl === "string" && rawIconUrl) {
+    try {
+      const iconUrl = new URL(rawIconUrl);
+      // microCMS can retain an image URL while its contents change. Versioning
+      // the URL with updatedAt prevents the browser/CDN from showing the old icon.
+      if (source.updatedAt) iconUrl.searchParams.set("v", source.updatedAt);
+      profile.iconUrl = iconUrl.href;
+    } catch {
+      profile.iconUrl = rawIconUrl;
+    }
+  } else {
+    profile.iconUrl = "";
+  }
   return profile;
 }
 
@@ -37,7 +55,8 @@ export default async function handler(req, res) {
     });
     if (!response.ok) return res.status(response.status).send(await response.text());
 
-    res.setHeader("Cache-Control", "s-maxage=60, stale-while-revalidate=300");
+    // Profile edits (especially a replaced icon) should be visible immediately.
+    res.setHeader("Cache-Control", "no-store");
     return res.status(200).json({ profile: normalizeProfile(await response.json()) });
   } catch (error) {
     return res.status(500).json({ error: String(error) });

@@ -14,11 +14,24 @@ function createResponse() {
 }
 
 test("normalizeProfile exposes only supported fields and normalizes the image", () => {
-  const profile = normalizeProfile({ name: " Ren ", icon: { url: "https://img.example/icon.png" }, secret: "no" });
+  const profile = normalizeProfile({
+    name: " Ren ",
+    icon: { url: "https://img.example/icon.png" },
+    updatedAt: "2026-08-22T12:00:00.000Z",
+    secret: "no",
+  });
   assert.equal(profile.name, "Ren");
-  assert.equal(profile.iconUrl, "https://img.example/icon.png");
+  assert.equal(profile.iconUrl, "https://img.example/icon.png?v=2026-08-22T12%3A00%3A00.000Z");
   assert.equal(profile.secret, undefined);
   assert.equal(profile.bio, "");
+});
+
+test("normalizeProfile supports list responses and image arrays", () => {
+  const profile = normalizeProfile({
+    contents: [{ name: "レン", icon: [{ url: "https://img.example/new-icon.png" }] }],
+  });
+  assert.equal(profile.name, "レン");
+  assert.equal(profile.iconUrl, "https://img.example/new-icon.png");
 });
 
 test("handler requests the profile endpoint", async (t) => {
@@ -45,5 +58,5 @@ test("handler requests the profile endpoint", async (t) => {
   assert.equal(requestedUrl, "https://example.microcms.io/api/v1/profile");
   assert.equal(res.statusCode, 200);
   assert.equal(res.body.profile.name, "レン");
-  assert.equal(res.headers["Cache-Control"], "s-maxage=60, stale-while-revalidate=300");
+  assert.equal(res.headers["Cache-Control"], "no-store");
 });
