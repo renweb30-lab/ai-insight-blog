@@ -27,6 +27,8 @@
         box-shadow: 0 18px 50px rgba(15,23,42,.08);
       }
       .hero.profile-hero p{ color:#334155; }
+      .profile-copy-line{ display:block; }
+      .profile-copy-line + .profile-copy-line{ margin-top: .35em; }
 
       .profile-card{
         background: rgba(255,255,255,.92);
@@ -170,20 +172,23 @@
     <main>
       <div class="container">
         <section class="hero profile-hero" style="margin-bottom: 32px;">
-          <h1>運営プロフィール</h1>
-          <p>
+          <h1 data-profile="heroTitle">運営プロフィール</h1>
+          <p data-profile="heroText">
             AIを「知ってる」で終わらせず、<strong>今日から使える</strong>形にして届ける。
             忙しくても迷わずキャッチアップできる“実践メディア”です。
           </p>
           <div class="hero-actions">
-            <a class="button primary" href="https://www.instagram.com/ren_ai_lab_/?hl=ja" target="_blank" rel="noopener">
+            <a class="button primary" data-social="instagramUrl" href="https://www.instagram.com/ren_ai_lab_/?hl=ja" target="_blank" rel="noopener">
               <i class="fa-brands fa-instagram"></i> Instagram
             </a>
-            <a class="button secondary" href="https://coconala.com/users/5831852" target="_blank" rel="noopener">
+            <a class="button secondary" data-social="coconalaUrl" href="https://coconala.com/users/5831852" target="_blank" rel="noopener">
               <i class="fa-solid fa-store"></i> ココナラ
             </a>
-            <a class="button secondary" href="https://www.threads.com/@ren_web3.0_/" target="_blank" rel="noopener">
+            <a class="button secondary" data-social="threadsUrl" href="https://www.threads.com/@ren_web3.0_/" target="_blank" rel="noopener">
               <i class="fa-brands fa-threads"></i> Threads
+            </a>
+            <a class="button secondary" data-social="xUrl" href="https://x.com/" target="_blank" rel="noopener" hidden>
+              <i class="fa-brands fa-x-twitter"></i> X
             </a>
           </div>
         </section>
@@ -192,14 +197,14 @@
           <div class="profile-header">
             <div class="profile-avatar" aria-hidden="true">
               <!-- ★ここにあなたのアイコン画像を置く -->
-              <img src="/profile-icon.png" alt="レンのプロフィール画像" />
+              <img data-profile-image src="/profile-icon.png" alt="レンのプロフィール画像" />
             </div>
 
             <div>
-              <p class="profile-role">AI × 生活 × 成果</p>
-              <h2 class="profile-name">レン￤AIでなんでも自動化する超多忙医学生</h2>
+              <p class="profile-role" data-profile="role">AI × 生活 × 成果</p>
+              <h2 class="profile-name" data-profile="name">レン￤AIでなんでも自動化する超多忙医学生</h2>
 
-              <p class="profile-lead">
+              <p class="profile-lead" data-profile="bio">
                 ＼忙しくてもAIで時間と収入をつくる／<br>
                 ▫️面倒な作業をAIでどんどん自動化<br>
                 ▫️スキマ時間でできるAI副業を実験<br>
@@ -208,14 +213,17 @@
               </p>
 
               <div class="profile-links">
-                <a href="https://www.instagram.com/ren_ai_lab_/?hl=ja" target="_blank" rel="noopener">
+                <a data-social="instagramUrl" href="https://www.instagram.com/ren_ai_lab_/?hl=ja" target="_blank" rel="noopener">
                   <i class="fa-brands fa-instagram"></i> Instagram
                 </a>
-                <a href="https://coconala.com/users/5831852" target="_blank" rel="noopener">
+                <a data-social="coconalaUrl" href="https://coconala.com/users/5831852" target="_blank" rel="noopener">
                   <i class="fa-solid fa-store"></i> ココナラ
                 </a>
-                <a href="https://www.threads.com/@ren_web3.0_/" target="_blank" rel="noopener">
+                <a data-social="threadsUrl" href="https://www.threads.com/@ren_web3.0_/" target="_blank" rel="noopener">
                   <i class="fa-brands fa-threads"></i> Threads
+                </a>
+                <a data-social="xUrl" href="https://x.com/" target="_blank" rel="noopener" hidden>
+                  <i class="fa-brands fa-x-twitter"></i> X
                 </a>
               </div>
             </div>
@@ -223,8 +231,8 @@
 
           <div class="profile-grid">
             <div class="profile-section">
-              <h3><i class="fa-solid fa-bullseye"></i> このサイトで届けたいこと</h3>
-              <ul>
+              <h3><i class="fa-solid fa-bullseye"></i> <span data-profile="missionTitle">このサイトで届けたいこと</span></h3>
+              <ul data-profile-list="missionText">
                 <li><strong>AIをどう使えば、今日の作業がラクになるか</strong></li>
                 <li>ニュースを読むだけで終わらせず、<strong>行動に落とす視点</strong></li>
                 <li>勉強・仕事・副業に<strong>直結するAI活用法</strong></li>
@@ -232,8 +240,8 @@
             </div>
 
             <div class="profile-section">
-              <h3><i class="fa-solid fa-route"></i> 発信スタイル</h3>
-              <ul>
+              <h3><i class="fa-solid fa-route"></i> <span data-profile="styleTitle">発信スタイル</span></h3>
+              <ul data-profile-list="styleText">
                 <li><strong>結論ファースト</strong>で迷わせない</li>
                 <li>1記事＝<strong>5分で本質が掴める</strong>構成</li>
                 <li>「で、何すればいい？」が<strong>必ず分かる締め</strong></li>
@@ -241,8 +249,8 @@
             </div>
 
             <div class="profile-section">
-              <h3><i class="fa-solid fa-sparkles"></i> こんな人におすすめ</h3>
-              <ul>
+              <h3><i class="fa-solid fa-sparkles"></i> <span data-profile="audienceTitle">こんな人におすすめ</span></h3>
+              <ul data-profile-list="audienceText">
                 <li>AIを触りたいけど、何から始めればいいか分からない</li>
                 <li>忙しくてニュースを追えない（要点だけ知りたい）</li>
                 <li>勉強・仕事・副業で“成果が出る使い方”を知りたい</li>
@@ -298,6 +306,79 @@
       document.querySelectorAll("[data-current-year]").forEach((el) => {
         el.textContent = String(new Date().getFullYear());
       });
+
+      function renderLines(element, value) {
+        const lines = value.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
+        element.replaceChildren(...lines.map((line) => {
+          const span = document.createElement("span");
+          span.className = "profile-copy-line";
+          span.textContent = line;
+          return span;
+        }));
+      }
+
+      function renderList(element, value) {
+        const items = value.split(/\r?\n/)
+          .map((line) => line.trim().replace(/^[・●■▪▫◼︎◻︎\-–—*]+\s*/, ""))
+          .filter(Boolean);
+        if (!items.length) return;
+        element.replaceChildren(...items.map((item) => {
+          const li = document.createElement("li");
+          li.textContent = item;
+          return li;
+        }));
+      }
+
+      function safeExternalUrl(value) {
+        try {
+          const url = new URL(value);
+          return ["http:", "https:"].includes(url.protocol) ? url.href : "";
+        } catch {
+          return "";
+        }
+      }
+
+      async function loadProfile() {
+        const card = document.querySelector(".profile-card");
+        card?.setAttribute("aria-busy", "true");
+        try {
+          const response = await fetch("/api/profile", { cache: "no-store" });
+          if (!response.ok) throw new Error("Failed to fetch /api/profile");
+          const { profile } = await response.json();
+
+          document.querySelectorAll("[data-profile]").forEach((element) => {
+            const value = profile[element.dataset.profile];
+            if (!value) return;
+            if (["bio", "heroText"].includes(element.dataset.profile)) renderLines(element, value);
+            else element.textContent = value;
+          });
+          document.querySelectorAll("[data-profile-list]").forEach((element) => {
+            const value = profile[element.dataset.profileList];
+            if (value) renderList(element, value);
+          });
+
+          const image = document.querySelector("[data-profile-image]");
+          if (image && profile.iconUrl) {
+            image.src = profile.iconUrl;
+            image.alt = `${profile.name || "運営者"}のプロフィール画像`;
+          }
+          document.querySelectorAll("[data-social]").forEach((link) => {
+            const url = safeExternalUrl(profile[link.dataset.social]);
+            if (url) {
+              link.href = url;
+              link.hidden = false;
+            } else {
+              link.hidden = true;
+            }
+          });
+        } catch (error) {
+          console.error("プロフィールを読み込めませんでした。", error);
+        } finally {
+          card?.removeAttribute("aria-busy");
+        }
+      }
+
+      loadProfile();
 
       (function setupMenu() {
         const btn = document.querySelector(".menu-toggle");
