@@ -154,7 +154,7 @@
 
       function fmtDate(iso) {
         try {
-          return new Date(iso).toLocaleDateString("ja-JP");
+          return new Date(iso).toLocaleDateString("ja-JP", { timeZone: "Asia/Tokyo" });
         } catch {
           return iso || "";
         }

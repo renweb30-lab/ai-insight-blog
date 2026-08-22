@@ -5,6 +5,16 @@ function isPublishedPost(post, now) {
   return Number.isFinite(publishedAt) && publishedAt <= now.getTime();
 }
 
+function normalizeSummary(post) {
+  const summary = String(post?.summary || "").trim();
+  if (summary !== "要約テスト") return summary;
+
+  if (/Codex\s*Security/i.test(post?.title || "")) {
+    return "Codex Securityの特徴と、開発現場で安全に活用するためのポイントをわかりやすく解説します。";
+  }
+  return "この記事の要点と、実務ですぐ試せるポイントをわかりやすく紹介します。";
+}
+
 export default async function handler(req, res) {
   try {
     const domain = process.env.MICROCMS_SERVICE_DOMAIN;
@@ -49,7 +59,8 @@ export default async function handler(req, res) {
           title: p.title,
           publishedAt: p.publishedAt,
           categoryId: normalizedCategoryId || "ai-news",
-          summary: p.summary || "",
+          summary: normalizeSummary(p),
+          recommended: Boolean(p.recommended),
           content: p.content || "",
           eyecatchUrl: p.eyecatch?.url || "",
         };
@@ -62,4 +73,4 @@ export default async function handler(req, res) {
   }
 }
 
-export { isPublishedPost };
+export { isPublishedPost, normalizeSummary };

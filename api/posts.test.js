@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import handler, { isPublishedPost } from "./posts.js";
+import handler, { isPublishedPost, normalizeSummary } from "./posts.js";
 
 function createResponse() {
   return {
@@ -33,6 +33,14 @@ test("isPublishedPost rejects drafts, invalid dates, and scheduled posts", () =>
   assert.equal(isPublishedPost({ publishedAt: "invalid" }, now), false);
   assert.equal(isPublishedPost({ publishedAt: "2026-08-22T12:00:01.000Z" }, now), false);
   assert.equal(isPublishedPost({ publishedAt: "2026-08-22T11:59:59.000Z" }, now), true);
+});
+
+test("normalizeSummary replaces unfinished test copy", () => {
+  assert.equal(
+    normalizeSummary({ title: "Codex Security 入門", summary: "要約テスト" }),
+    "Codex Securityの特徴と、開発現場で安全に活用するためのポイントをわかりやすく解説します。"
+  );
+  assert.equal(normalizeSummary({ title: "記事", summary: "完成した要約" }), "完成した要約");
 });
 
 test("handler only returns content with an effective publishedAt", async (t) => {

@@ -59,6 +59,8 @@
           </div>
         </article>
 
+        <section class="post-cta" data-post-cta aria-live="polite" hidden></section>
+
         <section class="post-feedback" aria-labelledby="feedback-title">
           <div class="feedback-header">
             <p class="eyebrow">Insight Feedback</p>
@@ -155,10 +157,44 @@
 
     function fmtDate(iso) {
       try {
-        return new Date(iso).toLocaleDateString("ja-JP");
+        return new Date(iso).toLocaleDateString("ja-JP", { timeZone: "Asia/Tokyo" });
       } catch {
         return iso || "";
       }
+    }
+
+    function setupTableOfContents(article) {
+      const prose = article.querySelector(".post-prose");
+      if (!prose) return;
+      const headings = Array.from(prose.querySelectorAll("h2, h3"));
+      if (headings.length < 2) return;
+      headings.forEach((heading, index) => {
+        if (!heading.id) heading.id = `section-${index + 1}`;
+      });
+      const toc = document.createElement("details");
+      toc.className = "post-toc";
+      toc.open = window.matchMedia("(min-width: 721px)").matches;
+      toc.innerHTML = `<summary><i class="fa-solid fa-list" aria-hidden="true"></i> 目次</summary><nav aria-label="記事の目次"><ol>${headings.map((heading) => `<li class="toc-${heading.tagName.toLowerCase()}"><a href="#${escapeHtml(heading.id)}">${escapeHtml(heading.textContent)}</a></li>`).join("")}</ol></nav>`;
+      prose.before(toc);
+    }
+
+    function renderPostCta(post, categoryId) {
+      const target = document.querySelector("[data-post-cta]");
+      if (!target) return;
+      const text = `${post.title || ""} ${post.summary || ""}`;
+      let cta;
+      if (categoryId === "ai-auto" || /自動化|Make/i.test(text)) {
+        cta = ["AUTOMATION KIT", "まずは無料テンプレートから", "記事の手順をすぐ試せるテンプレートをInstagramで配布しています。", "無料テンプレートを受け取る", "https://www.instagram.com/ren_web3.0_/", "fa-download"];
+      } else if (categoryId === "ai-tools" || /ツール|ChatGPT|Codex/i.test(text)) {
+        cta = ["TOOL GUIDE", "自分に合うツールを選ぶ", "比較表とおすすめ設定をチェックして、迷わず使い始めましょう。", "比較表・おすすめ設定を見る", "categories.html?category=ai-tools", "fa-table-list"];
+      } else if (/副業|収益|稼|マネタイズ/.test(text)) {
+        cta = ["NEXT STEP", "AI副業の実践例をもっと見る", "短時間で試せる活用術をInstagramでも発信しています。", "Instagramをフォロー", "https://www.instagram.com/ren_web3.0_/", "fa-arrow-up-right-from-square"];
+      } else {
+        cta = ["IMPLEMENTATION SUPPORT", "実装で迷ったら相談できます", "AI導入や実装のお悩みを、状況に合わせて一緒に整理します。", "ココナラで相談する", "https://coconala.com/users/5831852", "fa-comments"];
+      }
+      const external = cta[4].startsWith("http") ? ` target="_blank" rel="noopener"` : "";
+      target.hidden = false;
+      target.innerHTML = `<div><p class="eyebrow">${cta[0]}</p><h2>${cta[1]}</h2><p>${cta[2]}</p></div><a class="button primary" href="${cta[4]}"${external}><i class="fa-solid ${cta[5]}" aria-hidden="true"></i> ${cta[3]}</a>`;
     }
 
     (async () => {
@@ -208,6 +244,9 @@
             ${p.content ? p.content : "<p>本文がまだ設定されていません</p>"}
           </div>
         `;
+
+        setupTableOfContents(el);
+        renderPostCta(p, categoryId);
 
         if (status) status.textContent = "";
       } catch (e) {
