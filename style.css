@@ -799,7 +799,7 @@ footer{margin-top:72px;background:#fff}
 .post-toc a:hover{text-decoration:underline}
 .post-cta{margin-top:24px;padding:24px;display:flex;align-items:center;justify-content:space-between;gap:24px;color:#fff;border-radius:18px;background:linear-gradient(135deg,#0f172a,#075985);box-shadow:0 16px 35px rgba(15,23,42,.15)}
 .post-cta .eyebrow{margin:0 0 5px;color:#7dd3fc;font-size:.75rem;font-weight:700;letter-spacing:.12em}
-.post-cta h2{margin:0 0 7px;font-size:1.3rem}
+.post-cta h2{margin:0 0 7px;color:#fff;font-size:1.3rem}
 .post-cta p{margin:0;color:#e0f2fe}
 .post-cta .button{flex:none}
 .archive-search{max-width:680px;margin-top:22px;text-align:left}
