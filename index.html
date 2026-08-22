@@ -48,10 +48,10 @@
       <div class="container">
         <section class="hero">
           <p class="hero-eyebrow"><i class="fa-solid fa-bolt" aria-hidden="true"></i> Practical AI Intelligence</p>
-          <h1>AIとテックの“いま”を、ストレスなくキャッチアップ</h1>
+          <h1>忙しくても回せる、AI副業・自動化の実践ラボ</h1>
           <p>
-            投資・ビジネス・実務活用まで、AI初心者〜中級者のためのナレッジハブ。
-            最新ニュースからツール紹介まで、読むべき情報だけを厳選してお届けします。
+            本業のすき間時間で試せるAI活用を、初心者にもわかりやすく。
+            自動化の手順、ツールの選び方、収益化まで、手を動かせる情報だけを届けます。
           </p>
           <div class="hero-actions">
             <a href="#latest" class="button primary">
@@ -237,7 +237,7 @@
 
       function fmtDate(iso) {
         try {
-          return new Date(iso).toLocaleDateString("ja-JP");
+          return new Date(iso).toLocaleDateString("ja-JP", { timeZone: "Asia/Tokyo" });
         } catch {
           return iso || "";
         }
@@ -379,10 +379,34 @@
         let shown = 0;
         const PAGE_SIZE = 6;
 
+        function getRecommendedPosts() {
+          const editorialPicks = allPosts.filter((post) => post.recommended);
+          if (editorialPicks.length >= 4) return editorialPicks.slice(0, 4);
+          const editorialIds = new Set(editorialPicks.map((post) => post.id));
+          const scored = allPosts.map((post, index) => {
+            const text = `${post.title || ""} ${post.summary || ""}`;
+            const category = window.normalizeCategoryId(post.categoryId);
+            let score = 0;
+            if (category === "ai-intro") score += 5;
+            if (category === "ai-auto") score += 4;
+            if (/初心者|入門|始め方|基礎/.test(text)) score += 4;
+            if (/副業|収益|稼|自動化|Make|ChatGPT/i.test(text)) score += 3;
+            return { post, score, index };
+          });
+          const fallbackPicks = scored
+            .sort((a, b) => b.score - a.score || a.index - b.index)
+            .filter(({ post }) => !editorialIds.has(post.id))
+            .slice(0, 4 - editorialPicks.length)
+            .map(({ post }) => post);
+          return [...editorialPicks, ...fallbackPicks];
+        }
+
+        let recommendedPosts = [];
+
         function renderRecommended() {
           if (!recEl) return;
-          const pick = allPosts.slice(0, 4); // とりあえず先頭4つ
-          recEl.innerHTML = pick.length ? pick.map(cardHtml).join("") : `<p class="status-text">記事がありません</p>`;
+          recommendedPosts = getRecommendedPosts();
+          recEl.innerHTML = recommendedPosts.length ? recommendedPosts.map(cardHtml).join("") : `<p class="status-text">記事がありません</p>`;
         }
 
         function renderCategories() {
@@ -409,7 +433,9 @@
             latestEl.innerHTML = "";
           }
 
-          const next = allPosts.slice(shown, shown + PAGE_SIZE);
+          const recommendedIds = new Set(recommendedPosts.map((post) => post.id));
+          const latestPosts = allPosts.filter((post) => !recommendedIds.has(post.id));
+          const next = latestPosts.slice(shown, shown + PAGE_SIZE);
           shown += next.length;
 
           if (reset && next.length === 0) {
@@ -419,7 +445,7 @@
           }
 
           if (moreBtn) {
-            moreBtn.style.display = shown < allPosts.length ? "inline-flex" : "none";
+            moreBtn.style.display = shown < latestPosts.length ? "inline-flex" : "none";
           }
           if (statusEl) statusEl.textContent = "";
         }

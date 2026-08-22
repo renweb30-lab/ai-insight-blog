@@ -47,6 +47,14 @@
         <section class="hero" style="margin-bottom: 32px;">
           <h1>アーカイブ</h1>
           <p>年月別に投稿を整理しました。読みたいタイミングの情報にすぐアクセスできます。</p>
+          <form class="archive-search" role="search" data-archive-search>
+            <label for="archive-keyword">記事をキーワードで検索</label>
+            <div class="search-field">
+              <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+              <input id="archive-keyword" type="search" placeholder="Make・ChatGPT・株など" autocomplete="off" />
+              <button class="button primary" type="submit">検索</button>
+            </div>
+          </form>
           <div class="hero-actions">
             <div class="button secondary" style="cursor: default;">
               <i class="fa-regular fa-calendar"></i>
@@ -149,7 +157,7 @@
 
       function fmtDate(iso) {
         try {
-          return new Date(iso).toLocaleDateString("ja-JP");
+          return new Date(iso).toLocaleDateString("ja-JP", { timeZone: "Asia/Tokyo" });
         } catch {
           return iso || "";
         }
@@ -157,20 +165,29 @@
 
       function monthKey(iso) {
         const d = new Date(iso);
-        const y = d.getFullYear();
-        const m = String(d.getMonth() + 1).padStart(2, "0");
+        const parts = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Tokyo", year: "numeric", month: "2-digit" }).formatToParts(d);
+        const y = parts.find((part) => part.type === "year").value;
+        const m = parts.find((part) => part.type === "month").value;
         return `${y}-${m}`;
       }
 
-      function buildTimeline(posts, year) {
+      function getTokyoYear(iso) {
+        return new Intl.DateTimeFormat("en", { timeZone: "Asia/Tokyo", year: "numeric" }).format(new Date(iso));
+      }
+
+      function buildTimeline(posts, year, keyword = "") {
         // year が指定されていたらその年だけ
         const filtered = year
-          ? posts.filter((p) => String(new Date(p.publishedAt).getFullYear()) === String(year))
+          ? posts.filter((p) => getTokyoYear(p.publishedAt) === String(year))
           : posts;
+        const query = keyword.trim().toLocaleLowerCase("ja");
+        const searched = query
+          ? filtered.filter((p) => `${p.title || ""} ${p.summary || ""} ${window.getCategoryLabel(p.categoryId)}`.toLocaleLowerCase("ja").includes(query))
+          : filtered;
 
         // 月ごとにグルーピング
         const groups = new Map();
-        for (const p of filtered) {
+        for (const p of searched) {
           const key = monthKey(p.publishedAt);
           if (!groups.has(key)) groups.set(key, []);
           groups.get(key).push(p);
@@ -234,7 +251,7 @@
 
           // 年の一覧
           const years = Array.from(
-            new Set(posts.map((p) => new Date(p.publishedAt).getFullYear()))
+            new Set(posts.map((p) => Number(getTokyoYear(p.publishedAt))))
           ).sort((a, b) => b - a);
 
           const params = new URLSearchParams(location.search);
@@ -257,9 +274,18 @@
           }
 
           // タイムライン描画
-          timelineEl.innerHTML = buildTimeline(posts, selectedYear);
+          const searchForm = document.querySelector("[data-archive-search]");
+          const searchInput = document.getElementById("archive-keyword");
+          const render = () => {
+            const keyword = searchInput?.value || "";
+            const html = buildTimeline(posts, selectedYear, keyword);
+            timelineEl.innerHTML = html || `<p class="status-text">「${escapeHtml(keyword)}」に一致する記事はありません</p>`;
+            if (statusEl) statusEl.textContent = keyword ? `${posts.filter((p) => `${p.title || ""} ${p.summary || ""}`.toLocaleLowerCase("ja").includes(keyword.toLocaleLowerCase("ja"))).length}件` : "";
+          };
+          render();
+          searchForm?.addEventListener("submit", (event) => { event.preventDefault(); render(); });
+          searchInput?.addEventListener("input", render);
 
-          if (statusEl) statusEl.textContent = "";
         } catch (e) {
           if (timelineEl) timelineEl.innerHTML = `<p class="status-text">読み込みに失敗しました</p>`;
           if (statusEl) statusEl.textContent = String(e);
