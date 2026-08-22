@@ -76,6 +76,9 @@
             <button class="insight-tab" type="button" data-insight="stocks" role="tab" aria-selected="false">
               <i class="fa-solid fa-chart-line"></i> 株・ビジネス
             </button>
+            <button class="insight-tab" type="button" data-insight="automation" role="tab" aria-selected="false">
+              <i class="fa-solid fa-gears"></i> AI自動化
+            </button>
           </div>
           <div class="insight-card" data-insight-card>
             <div class="insight-main">
@@ -161,6 +164,7 @@
               <a href="categories.html?category=ai-tools">AIツール</a>
               <a href="categories.html?category=ai-stocks">AI株情報</a>
               <a href="categories.html?category=ai-intro">AI入門</a>
+              <a href="categories.html?category=ai-auto">AI自動化</a>
             </div>
             <div class="footer-column">
               <p class="footer-title">Connect</p>
@@ -211,6 +215,10 @@
         stocks: {
           categoryId: "ai-stocks",
           label: "AI株情報",
+        },
+        automation: {
+          categoryId: "ai-auto",
+          label: "AI自動化",
         },
       };
 
@@ -378,7 +386,10 @@
         function renderCategories() {
           if (!catEl) return;
           const uniq = Array.from(
-            new Set(allPosts.map((p) => window.normalizeCategoryId(p.categoryId)).filter(Boolean))
+            new Set([
+              ...Object.keys(window.CATEGORY_LABELS),
+              ...allPosts.map((p) => window.normalizeCategoryId(p.categoryId)).filter(Boolean),
+            ])
           );
           catEl.innerHTML = uniq
             .map((id) => {
