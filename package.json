@@ -1,0 +1,8 @@
+{
+  "name": "ai-insight-blog",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  }
+}
