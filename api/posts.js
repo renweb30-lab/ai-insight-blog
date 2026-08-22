@@ -1,12 +1,29 @@
+function isPublishedPost(post, now) {
+  if (!post?.publishedAt) return false;
+
+  const publishedAt = Date.parse(post.publishedAt);
+  return Number.isFinite(publishedAt) && publishedAt <= now.getTime();
+}
+
 export default async function handler(req, res) {
   try {
     const domain = process.env.MICROCMS_SERVICE_DOMAIN;
     const apiKey = process.env.MICROCMS_API_KEY;
     const endpoint = process.env.MICROCMS_ENDPOINT || "blog";
 
-    const url = `https://${domain}.microcms.io/api/v1/${endpoint}?limit=100&orders=-publishedAt`;
+    if (!domain || !apiKey) {
+      return res.status(500).json({ error: "microCMS is not configured" });
+    }
 
-    const r = await fetch(url, {
+    const now = new Date();
+    const apiUrl = new URL(`https://${domain}.microcms.io/api/v1/${endpoint}`);
+    apiUrl.searchParams.set("limit", "100");
+    apiUrl.searchParams.set("orders", "-publishedAt");
+    // Do not rely solely on the CMS response defaults: explicitly request only
+    // content whose publication time has arrived.
+    apiUrl.searchParams.set("filters", `publishedAt[less_than]${now.toISOString()}`);
+
+    const r = await fetch(apiUrl, {
       headers: { "X-MICROCMS-API-KEY": apiKey },
     });
 
@@ -17,22 +34,26 @@ export default async function handler(req, res) {
 
     const data = await r.json();
 
-    const posts = (data.contents || []).map((p) => {
-      const normalizedCategoryId = Array.isArray(p.categoryId)
-        ? p.categoryId[0]
-        : p.categoryId;
+    // Defence in depth: drafts have no publishedAt. Filtering again here keeps
+    // them (and scheduled content) private even if the upstream query changes.
+    const posts = (data.contents || [])
+      .filter((post) => isPublishedPost(post, now))
+      .map((p) => {
+        const normalizedCategoryId = Array.isArray(p.categoryId)
+          ? p.categoryId[0]
+          : p.categoryId;
 
-      return {
-        id: p.id,
-        slug: p.slug || p.id,
-        title: p.title,
-        publishedAt: p.publishedAt || p.createdAt,
-        categoryId: normalizedCategoryId || "ai-news",
-        summary: p.summary || "",
-        content: p.content || "",
-        eyecatchUrl: p.eyecatch?.url || "",
-      };
-    });
+        return {
+          id: p.id,
+          slug: p.slug || p.id,
+          title: p.title,
+          publishedAt: p.publishedAt,
+          categoryId: normalizedCategoryId || "ai-news",
+          summary: p.summary || "",
+          content: p.content || "",
+          eyecatchUrl: p.eyecatch?.url || "",
+        };
+      });
 
     res.setHeader("Cache-Control", "s-maxage=60, stale-while-revalidate=300");
     return res.status(200).json({ posts });
@@ -40,3 +61,5 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: String(e) });
   }
 }
+
+export { isPublishedPost };
